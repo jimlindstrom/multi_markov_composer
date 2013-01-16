@@ -1,0 +1,85 @@
+### QUESTIONS
+
+- Why are so few of the improvised melodies rhythmically unintelligable?
+
+- Why did going to a lower-order PitchAndPitchClassSetCritic improve its 
+  performance?  That indicates the backoff algorithm is probably not optimal
+
+### BETTER IMPROVS
+
+Use copies of the critics that are trained on the stats in the stimulus.  That 
+way the response should be more likely to bear a resemblance to the stimulus and
+it should feel more interactive.
+
+How can the improvs contain repeated motifs?
+	- use two copies of every critic.  One is trained on long-term inputs.  The
+	  other is reset at the beginning of each listening, and is used to generate
+	  piece-specific expectations
+	- generate ad hoc, instead of rigidly left-to-right?
+	- add motif critic that looks for good places to insert these motifs and
+	  creates expectations for them
+
+Manage the surprise:
+	- Try constraining the surprises primarily to either pitch OR rhythm.  Could 
+	  do this by self-multiplying expectations, to square the probabilities
+	- Have a surprise critic that generates expected surprise envelopes
+
+Do a better job baselining the predictive performance and then measuring 
+improvements:
+	- Look at the cross entropy coming out of the pitch generator, in addition
+	  to the individual critics.  That is more representative of the whole
+	  model, and the likely cross entropy of generated improvs.
+	- Move from cumulative information content to cumulative cross entropy, which
+	  is a more standard info-theoretic calculation.
+
+Look at aggregate stats:
+	- pitch range
+	- jumps vs. steps
+	- surprise envelopes
+	- overall shape of line 
+
+Explore ways to make it harmonically intelligible
+	- critic for {pitch class set (polyphonic, harmonic context); last note}->{next note}
+		- this critic would be idle/mute for monophonic inputs
+		- this is easier in 4-part choral-style midi files, because they're separated into
+		  tracks.  In the general case (live, human performer), we'd need a stream
+		  splitter.  Could be a fancier one that can parse things like Bach prelude 1. Or
+		  could just take the highest active note at any point in time.
+	- Like duration, if we have notes from other tracks, we can use that as polyphonic
+	  context. If we don't, we could fall back on scalar context.
+
+Have PitchAndPitchClassSetCritic do more sophisticated weighting, based on 
+	- beat strength
+
+Change to planning based on time or number of beats (vs. number of notes)
+
+I'd like to build layers of assumptions and fall-back as needed.
+	- First assume we're doing standard Western cannon.  
+	- Then if that fails, assume there's still chords and scales.  
+	- Then if that fails, look for consistent pitch class sets.  
+	- And if all else fails ... no idea.
+
+### REFACTORING
+
+fake_sensor_vectors is now huge.  figure out a different strategy...
+	- Don't load all >50MB of events when running specs
+	- I also want to load / not load different styles easily.
+
+Put a 'context' member on each note that points to shared context hash (***)
+	- this could be different for different phrases
+	- it could contain harmonic info, intended surprise levels, etc.
+
+### MORE RESPONSIVE / INTERACTIVE
+
+Mimic the stimulus's: meter
+Mimic the stimulus's: phrase length
+Mimic the stimulus's: tempo
+Mimic the stimulus's: pitch classes
+
+### INTRODUCING FARG ARCHITECTURE
+
+Explore FARG architecture for improvising better endings
+
+Use rule-based FARG architectures to go apply happiness / unhappiness values throughout a finished improv and rip the parts
+
+Use FARG techniques to look for structure / repeated patterns in the stimulus

@@ -1,0 +1,89 @@
+### Objecive
+
+NO: Structurally segment the melody into a decomposable tree
+	- this is not what I am trying to do.  I don't believe that every note
+	  must fulfill a structural role.  I believe that the ear is retaining 
+	  enough information to make that calculation.  I believe that the lay 
+	  ear reduces information pretty radically and hears approximate contours
+	  (envelopes), fuzzy intervals, etc.  
+
+YES: Identify repeated elements or groups of elements.
+	- This is more what I'm after.  I believe that the note-by-note stats
+	  that are currently driving the improv engine are insufficient to 
+	  structure the piece.  I'm merely looking for some top-level templates
+	  that can be used as a skeleton to exert top-down structure pressure on
+	  the bottom-up, note-by-note statistics currently being used to generate
+	  improvisations
+
+### How to represent notes
+
+Pour more analysis (symbols) back into the notes themselves:
+	- qIOI
+	- fuzzy qIOI (short / med / long)
+	- pitch
+	- pitch class
+	- pitch class distance (along circle of 5ths)
+	- index in pitch class set
+	- interval 
+	- fuzzy interval (direction & step/jump)
+and use these dimensions to compare similarity / role 
+
+### Architecture
+
+What does a group look like?  
+	- Just an array?
+	- A list of slots/roles?
+	- Maybe groups start out as arrays, but can get promoted into themes, which
+	  describe the role of each item in the array, or describe how each item is
+	  related to the one before it, or both. (promotion to themes would occur when
+	  two groups are being compared/related.)
+
+What does a group represent?
+	- some sense of entity/oneness/unity:
+	- gestalt principles (separated by rests; in a different range; texturally 
+	  unique)
+	- constraints (a single pitch class set; only quarter notes; etc)
+	- a repeated pattern
+
+What do successive instances of a group represent?
+	- variation
+		- variations on an underlying, hidden, but stationary archetype (theme)?
+	- development
+		- http://en.wikipedia.org/wiki/Musical_development
+		- http://en.wikipedia.org/wiki/Sonata_form
+	- developing variation
+		- evolutions/changes (complications/extensions/complixifications) of an 
+		  intial simple idea?
+		- variations are produced through the development of existing material
+		- http://en.wikipedia.org/wiki/Developing_variation
+
+Correspondences between groups may not be strictly top-down, decompositional
+	- Maybe motifs, themes get labeled and a copy is put on a shelf, and then
+	  new instances get the same label, with a new instance ID.  There could
+	  be a new theme composed of a previous theme, plus a variation of an old
+	  motif, plus a new motif. 
+	- Things only get labeled as motifs, themes when they're seen a second 
+	  time?
+
+### Heuristics for grouping / splitting
+
+Split groupings at
+	- moments of high surprise
+
+Split groupings at
+	- the beginning or end of long IOIs
+	- bar lines
+
+Gestalt principles (look to GTTM for more)
+	- similarity - in A.A.B, prefer to group A.A vs A.B
+	- proximity - in A.B..C, prefer to group A.B vs. B..C
+	- closure - ABC.D is more likely a group than is ABC.A 
+	- good continuation - A.BxCy.z should produce overlapping A.B.C and x.y.z
+	- common fate - AxyBxyCxyD should produce interleaved A..B..C..D and xy.xy.xy ??
+	- good form - ?
+
+Groups should be homogeneous:
+	- Groups at a given abstraction-height should all have similar length
+	- Groups at different heights should have lengths in mostly non-overlapping 
+	  ranges
+

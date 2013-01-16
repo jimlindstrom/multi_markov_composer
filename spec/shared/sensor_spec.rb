@@ -4,8 +4,8 @@ require 'spec_helper'
 
 shared_examples_for "a sensor" do #|sensor, expected_num_responses|
   context ".get_stimulus" do
-    it "return a Midi::EventQueue" do
-      sensor.get_stimulus.should be_an_instance_of Midi::EventQueue
+    it "return a MusicIR::EventQueue" do
+      sensor.get_stimulus.should be_an_instance_of MusicIR::EventQueue
     end
     it "return nil if there are no more stimuli" do
       stimuli          = []
@@ -13,7 +13,7 @@ shared_examples_for "a sensor" do #|sensor, expected_num_responses|
       expected_num_responses.times do |stimulus_idx|
         puts "waiting for stimulus # #{stimulus_idx}"
         stimuli.push sensor.get_stimulus.class
-        expected_stimuli.push Midi::EventQueue
+        expected_stimuli.push MusicIR::EventQueue
       end
 
       stimuli.push sensor.get_stimulus.class

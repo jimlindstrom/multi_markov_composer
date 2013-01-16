@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module Music
+module MusicIR
    
   class Duration
     def to_symbol

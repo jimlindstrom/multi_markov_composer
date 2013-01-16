@@ -64,7 +64,7 @@ describe DurationAndBeatPositionCritic do
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:beat_position] = @nq1.first.analysis[:beat_position].dup
       note.analysis[:notes_left] = 1
-      dc.information_content(note).should == Math::RandomVariable.max_information_content
+      dc.information_content(note).should == Markov::RandomVariable.max_information_content
     end
   end
 

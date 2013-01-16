@@ -17,7 +17,7 @@ class InteractiveImprovisor
     @sensor = FakeSensor.new($fake_sensor_vectors, num_training_vectors)
     puts "\ttraining over #{num_training_vectors} vectors" if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
-      stimulus_notes = Music::NoteQueue.from_event_queue(stimulus_events)
+      stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
       @listener.listen stimulus_notes if !stimulus_notes.nil?
     end
 
@@ -28,7 +28,7 @@ class InteractiveImprovisor
       puts "\ttesting over #{num_testing_vectors} vectors" if LOGGING
       num_training_vectors.times { @sensor.get_stimulus } # throw away the ones we already trained on
       until (stimulus_events = @sensor.get_stimulus).nil?
-        stimulus_notes = Music::NoteQueue.from_event_queue(stimulus_events)
+        stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
         @listener.listen(stimulus_notes, do_logging=true) if !stimulus_notes.nil?
       end
     end
@@ -57,7 +57,7 @@ class InteractiveImprovisor
 
     puts "Listening..." if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
-      stimulus_notes = Music::NoteQueue.from_event_queue(stimulus_events)
+      stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
       @listener.listen stimulus_notes
 
       puts "Improvising..." if LOGGING
@@ -83,7 +83,7 @@ class InteractiveImprovisor
 
   def setup(use_real_midi=true)
     if use_real_midi
-      clock      = Midi::Clock.new(0)
+      clock      = MusicIR::Clock.new(0)
       @sensor    = MidiSensor.new("VMPK Output", clock)
       @sensor.set_stimulus_timeout(5.0)
       #@performer = MidiPerformer.new("VMPK Input")

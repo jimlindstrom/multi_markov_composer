@@ -13,10 +13,10 @@ class Improvisor
 
   def generate
     @note_generator.reset
-    response = Music::NoteQueue.new
+    response = MusicIR::NoteQueue.new
 
     # FIXME: replace this with a critic / random variable
-    meter = Music::Meter.random
+    meter = MusicIR::Meter.random
     beat_position = meter.initial_beat_position
     puts "\tmeter: #{meter.inspect}"
 

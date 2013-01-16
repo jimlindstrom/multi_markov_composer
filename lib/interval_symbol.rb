@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module Music
+module MusicIR
   
   class Interval
     def to_symbol

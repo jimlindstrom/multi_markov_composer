@@ -54,7 +54,7 @@ describe PitchAndPitchClassSetCritic do
       ppcs = PitchAndPitchClassSetCritic.new(order=2, lookahead=1)
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 1
-      ppcs.information_content(note).should == Math::RandomVariable.max_information_content
+      ppcs.information_content(note).should == Markov::RandomVariable.max_information_content
     end
   end
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module Music
+module MusicIR
 
   class PitchAndPitchClassSet
     attr_accessor :pitch, :pitch_class_set

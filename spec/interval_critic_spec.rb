@@ -62,7 +62,7 @@ describe IntervalCritic do
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(9), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 2
-      ic.information_content(note).should be_within(0.001).of(Math::RandomVariable.max_information_content)
+      ic.information_content(note).should be_within(0.001).of(Markov::RandomVariable.max_information_content)
     end
   end
 

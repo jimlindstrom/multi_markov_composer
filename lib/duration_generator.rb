@@ -50,7 +50,7 @@ class DurationGenerator
   def generate
     expectations = @complex_duration_critic.get_expectations
     x = expectations.choose_outcome
-    return Music::Duration.new(x) if !x.nil?
+    return MusicIR::Duration.new(x) if !x.nil?
 
     raise RuntimeError.new("Failed to generate a duration")
   end

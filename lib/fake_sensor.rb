@@ -15,7 +15,7 @@ class FakeSensor
     puts "FakeSensor returning \"#{next_vector_key}\"" if LOGGING
     vector = @vectors[next_vector_key]
 
-    event_queue = Midi::EventQueue.new
+    event_queue = MusicIR::EventQueue.new
     vector[:events].each do |e|
       event_queue.enqueue e
     end

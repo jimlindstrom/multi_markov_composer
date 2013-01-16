@@ -59,7 +59,7 @@ class PitchGenerator
   def generate
     expectations = @complex_pitch_critic.get_expectations
     x = expectations.choose_outcome
-    return Music::Pitch.new(x) if !x.nil?
+    return MusicIR::Pitch.new(x) if !x.nil?
 
     raise RuntimeError.new("Failed to choose a pitch")
   end

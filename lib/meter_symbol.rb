@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module Music
+module MusicIR
    
   class Meter
     def to_symbol

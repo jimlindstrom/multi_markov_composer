@@ -5,20 +5,20 @@ require 'spec_helper'
 shared_examples_for "a critic" do |class_type, params_for_new, filename|
 
   before(:each) do
-    @notes = Music::NoteQueue.new
-    @notes.push Music::Note.new(Music::Pitch.new(61), Music::Duration.new( 1))
-    @notes.push Music::Note.new(Music::Pitch.new(60), Music::Duration.new( 2))
-    @notes.push Music::Note.new(Music::Pitch.new(62), Music::Duration.new( 4))
-    @notes.push Music::Note.new(Music::Pitch.new(59), Music::Duration.new( 6))
-    @notes.push Music::Note.new(Music::Pitch.new(53), Music::Duration.new( 8))
-    @notes.push Music::Note.new(Music::Pitch.new(63), Music::Duration.new(10))
-    @notes.push Music::Note.new(Music::Pitch.new(77), Music::Duration.new(12))
-    @notes.push Music::Note.new(Music::Pitch.new(89), Music::Duration.new(14))
+    @notes = MusicIR::NoteQueue.new
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(61), MusicIR::Duration.new( 1))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(60), MusicIR::Duration.new( 2))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(62), MusicIR::Duration.new( 4))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(59), MusicIR::Duration.new( 6))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(53), MusicIR::Duration.new( 8))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(63), MusicIR::Duration.new(10))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(77), MusicIR::Duration.new(12))
+    @notes.push MusicIR::Note.new(MusicIR::Pitch.new(89), MusicIR::Duration.new(14))
 
     @notes.analyze!
 
     # since this is unlikely to have any real meter, just make up one and apply it
-    meter = Music::Meter.random
+    meter = MusicIR::Meter.random
     beat_position = meter.initial_beat_position
     @notes.each do |note|
       note.analysis[:beat_position] = beat_position
@@ -45,10 +45,10 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
         end
       end
       it "should return the information_content associated with the given note" do
-        @info_content.should == Math::RandomVariable.max_information_content
+        @info_content.should == Markov::RandomVariable.max_information_content
       end
       it "should add the information_content associated with the given note to the cumulative total" do
-        @c.cumulative_information_content.should == Math::RandomVariable.max_information_content
+        @c.cumulative_information_content.should == Markov::RandomVariable.max_information_content
       end
     end
     context "the first time it hears a sequence" do
@@ -76,10 +76,10 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
 #  context ".reset" do
 #    it "should reset to the state in which no notes have been heard yet" do
 #      pc = PitchCritic.new()
-#      pc.listen(Music::Note.new(Music::Pitch.new(1), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
 #      pc.reset
 #      x = pc.get_expectations
-#      Music::Pitch.new(x.choose_outcome).val.should == 1
+#      MusicIR::Pitch.new(x.choose_outcome).val.should == 1
 #    end
 #  end
 
@@ -165,16 +165,16 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
         c.listen n
       end
 
-      c.get_expectations.should be_an_instance_of Math::RandomVariable
+      c.get_expectations.should be_an_instance_of Markov::RandomVariable
     end
 #    it "returns a random variable that is less information_contentd about states observed more often" do
 #      order = 1
 #      pc = PitchCritic.new(order)
-#      pc.listen(Music::Note.new(Music::Pitch.new(1), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
 #      pc.reset
-#      pc.listen(Music::Note.new(Music::Pitch.new(1), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
 #      pc.reset
-#      pc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(0)))
 #      pc.reset
 #      x = pc.get_expectations
 #      x.information_content(1).should be < x.information_content(0)
@@ -182,29 +182,29 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
 #    it "returns a random variable that only chooses states observed" do
 #      order = 1
 #      pc = PitchCritic.new(order)
-#      pc.listen(Music::Note.new(Music::Pitch.new(1), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
 #      pc.reset
 #      x = pc.get_expectations
-#      Music::Pitch.new(x.choose_outcome).val.should == 1
+#      MusicIR::Pitch.new(x.choose_outcome).val.should == 1
 #    end
 #    it "returns a random variable that only chooses states observed (higher order)" do
 #      order = 3
 #      pc = PitchCritic.new(order)
-#      pc.listen(Music::Note.new(Music::Pitch.new(1), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(2), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(3), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(6), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(0)))
 #      pc.reset
-#      pc.listen(Music::Note.new(Music::Pitch.new(5), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(2), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(3), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(4), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(5), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(4), MusicIR::Duration.new(0)))
 #      pc.reset
-#      pc.listen(Music::Note.new(Music::Pitch.new(5), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(2), Music::Duration.new(0)))
-#      pc.listen(Music::Note.new(Music::Pitch.new(3), Music::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(5), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
+#      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
 #      x = pc.get_expectations
-#      Music::Pitch.new(x.choose_outcome).val.should == 4
+#      MusicIR::Pitch.new(x.choose_outcome).val.should == 4
 #    end
   end
 

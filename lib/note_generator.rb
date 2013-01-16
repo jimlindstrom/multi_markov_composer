@@ -18,6 +18,6 @@ class NoteGenerator
   end
 
   def generate
-    return Music::Note.new(@pitch_generator.generate, @duration_generator.generate)
+    return MusicIR::Note.new(@pitch_generator.generate, @duration_generator.generate)
   end
 end

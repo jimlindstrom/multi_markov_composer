@@ -24,13 +24,13 @@ class ComplexPitchCritic
   end
 
   def information_content(note)
-    raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != Music::Note
+    raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
     next_symbol = note.pitch.to_symbol
     expectations = get_expectations
     if expectations.num_observations > 0
       information_content = expectations.information_content(next_symbol.val)
     else
-      information_content = Math::RandomVariable.max_information_content
+      information_content = Markov::RandomVariable.max_information_content
     end
     add_to_cumulative_information_content information_content
     return information_content
@@ -53,7 +53,7 @@ class ComplexPitchCritic
     elsif !e2.nil?
       expectations = e2
     else
-      expectations = Math::RandomVariable.new(Music::Pitch.num_values)
+      expectations = Markov::RandomVariable.new(MusicIR::Pitch.num_values)
     end
 
     return expectations if expectations.num_observations > 0

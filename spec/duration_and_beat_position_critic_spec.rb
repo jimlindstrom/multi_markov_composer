@@ -23,21 +23,21 @@ describe DurationAndBeatPositionCritic do
       dc.listen(@nq1.first)
       dc.reset
       x = dc.get_expectations
-      Music::Duration.new(x.choose_outcome).val.should == @nq1.first.duration.val
+      MusicIR::Duration.new(x.choose_outcome).val.should == @nq1.first.duration.val
     end
   end
 
   context ".listen" do
     it "should raise an error if the note has no meter analysis" do
       dc = DurationAndBeatPositionCritic.new(order=2, lookahead=1)
-      note = Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1))
+      note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:beat_position] = @nq1.first.analysis[:beat_position].dup
       #note.analysis[:notes_left] = 1
       expect{ dc.listen(note) }.to raise_error(ArgumentError)
     end
     it "should raise an error if the note isn't tagged with the number of following notes" do
       dc = DurationAndBeatPositionCritic.new(order=2, lookahead=1)
-      note = Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1))
+      note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       #note.analysis[:beat_position] = @nq1.first.analysis[:beat_position].dup
       note.analysis[:notes_left] = 1
       expect{ dc.listen(note) }.to raise_error(ArgumentError)
@@ -47,21 +47,21 @@ describe DurationAndBeatPositionCritic do
   context ".information_content" do
     it "should raise an error if the note has no meter analysis" do
       dc = DurationAndBeatPositionCritic.new(order=2, lookahead=1)
-      note = Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1))
+      note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:beat_position] = @nq1.first.analysis[:beat_position].dup
       #note.analysis[:notes_left] = 1
       expect{ dc.information_content(note) }.to raise_error(ArgumentError)
     end
     it "should raise an error if the note isn't tagged with the number of following notes" do
       dc = DurationAndBeatPositionCritic.new(order=2, lookahead=1)
-      note = Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1))
+      note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       #note.analysis[:beat_position] = @nq1.first.analysis[:beat_position].dup
       note.analysis[:notes_left] = 1
       expect{ dc.information_content(note) }.to raise_error(ArgumentError)
     end
     it "should return the information_content associated with the given note" do
       dc = DurationAndBeatPositionCritic.new(order=2, lookahead=1)
-      note = Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1))
+      note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:beat_position] = @nq1.first.analysis[:beat_position].dup
       note.analysis[:notes_left] = 1
       dc.information_content(note).should == Math::RandomVariable.max_information_content
@@ -87,7 +87,7 @@ describe DurationAndBeatPositionCritic do
       dc.listen(@nq1.first)
       dc.reset
       x = dc.get_expectations
-      Music::Duration.new(x.choose_outcome).val.should == 1
+      MusicIR::Duration.new(x.choose_outcome).val.should == 1
     end
   end
 

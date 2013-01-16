@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'specs/vectors/fake_sensor_vectors'
+require 'spec/vectors/fake_sensor_vectors'
 
 class InteractiveImprovisor
 

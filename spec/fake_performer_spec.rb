@@ -6,7 +6,7 @@ describe FakePerformer do
   before do
     @performer   = FakePerformer.new
 
-    @event_queue = Midi::EventQueue.new
+    @event_queue = MusicIR::EventQueue.new
     vector = $fake_sensor_vectors["mary had a little lamb (phrase 1)"]
     vector[:events].each do |e|
       @event_queue.enqueue e

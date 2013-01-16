@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-module Music
+module MusicIR
  
   class DurationAndBeatPosition
     def to_symbol

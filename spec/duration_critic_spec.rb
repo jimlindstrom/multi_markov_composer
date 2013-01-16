@@ -9,10 +9,10 @@ describe DurationCritic do
     it "should reset to the state in which no notes have been heard yet" do
       order = 1
       dc = DurationCritic.new(order)
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
       dc.reset
       x = dc.get_expectations
-      Music::Duration.new(x.choose_outcome).val.should == 1
+      MusicIR::Duration.new(x.choose_outcome).val.should == 1
     end
   end
 
@@ -26,11 +26,11 @@ describe DurationCritic do
     it "returns a random variable that is less information_contentd about states observed more often" do
       order = 1
       dc = DurationCritic.new(order)
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
       dc.reset
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
       dc.reset
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(0)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(0)))
       dc.reset
       x = dc.get_expectations
       x.information_content(1).should be < x.information_content(0)
@@ -38,29 +38,29 @@ describe DurationCritic do
     it "returns a random variable that only chooses states observed" do
       order = 1
       dc = DurationCritic.new(order)
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
       dc.reset
       x = dc.get_expectations
-      Music::Duration.new(x.choose_outcome).val.should == 1
+      MusicIR::Duration.new(x.choose_outcome).val.should == 1
     end
     it "returns a random variable that only chooses states observed (higher order)" do
       order = 3
       dc = DurationCritic.new(order)
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(1)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(2)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(3)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(6)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(2)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(3)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(6)))
       dc.reset
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(5)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(2)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(3)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(4)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(5)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(2)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(3)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(4)))
       dc.reset
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(5)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(2)))
-      dc.listen(Music::Note.new(Music::Pitch.new(0), Music::Duration.new(3)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(5)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(2)))
+      dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(3)))
       x = dc.get_expectations
-      Music::Duration.new(x.choose_outcome).val.should == 4
+      MusicIR::Duration.new(x.choose_outcome).val.should == 4
     end
   end
 

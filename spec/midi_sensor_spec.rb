@@ -5,16 +5,16 @@ require 'spec_helper'
 describe MidiSensor, :midi_tests => true do
 
   before :each do
-    Midi::Loopback.create
+    MusicIR::Loopback.create
 
-    clock = Midi::Clock.new(0)
+    clock = MusicIR::Clock.new(0)
     @sensor = MidiSensor.new("VirMIDI 1-1", clock)
     @sensor.set_stimulus_timeout(1.0)
 
     @expected_num_responses = 1
 
     Thread.abort_on_exception = true
-    @outport = Midi::OutPort.new("VirMIDI 1-0")
+    @outport = MusicIR::OutPort.new("VirMIDI 1-0")
     @thread_id = Thread.new do
       @expected_num_responses.times do |stimulus_idx|
         sleep 0.25
@@ -22,10 +22,10 @@ describe MidiSensor, :midi_tests => true do
         puts "Writing stimulus # #{stimulus_idx}"
         notes_in_stimulus=30
         notes_in_stimulus.times do 
-          @event = Midi::NoteOnEvent.new({  :pitch=>100, :velocity=>100, :timestamp=>0})
+          @event = MusicIR::NoteOnEvent.new({  :pitch=>100, :velocity=>100, :timestamp=>0})
           @outport.write(@event) if !@outport.nil?
           sleep 0.1
-          @event = Midi::NoteOffEvent.new({ :pitch=>100, :velocity=>100, :timestamp=>0})
+          @event = MusicIR::NoteOffEvent.new({ :pitch=>100, :velocity=>100, :timestamp=>0})
           @outport.write(@event) if !@outport.nil?
           sleep 0.1
         end
@@ -40,7 +40,7 @@ describe MidiSensor, :midi_tests => true do
 
     @sensor.close
 
-    Midi::Loopback.destroy
+    MusicIR::Loopback.destroy
   end
 
   it_should_behave_like "a sensor" do

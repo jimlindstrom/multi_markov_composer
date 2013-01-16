@@ -2,23 +2,23 @@
 
 require 'spec_helper'
 
-describe Music::BeatPosition do
+describe MusicIR::BeatPosition do
 
   before(:each) do
   end
 
   context "to_symbol" do
     it "should return a BeatPositionSymbol" do
-      b = Music::BeatPosition.new
+      b = MusicIR::BeatPosition.new
       b.measure = 0
       b.beat    = 2
       b.subbeat = 3
       b.beats_per_measure = 4
       b.subbeats_per_beat = 1
-      b.to_symbol.should be_an_instance_of Music::BeatPositionSymbol
+      b.to_symbol.should be_an_instance_of MusicIR::BeatPositionSymbol
     end
     it "should return a BeatPositionSymbol whose value corresponds to the BeatPosition's value" do
-      b = Music::BeatPosition.new
+      b = MusicIR::BeatPosition.new
       b.measure = 0
       b.beat    = 2
       b.subbeat = 3

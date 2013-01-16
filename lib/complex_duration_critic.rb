@@ -23,13 +23,13 @@ class ComplexDurationCritic
   end
 
   def information_content(note)
-    raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != Music::Note
+    raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
     next_symbol = note.duration.to_symbol
     expectations = get_expectations
     if expectations.num_observations > 0
       information_content = expectations.information_content(next_symbol.val)
     else
-      information_content = Math::RandomVariable.max_information_content
+      information_content = Markov::RandomVariable.max_information_content
     end
     add_to_cumulative_information_content information_content
     return information_content

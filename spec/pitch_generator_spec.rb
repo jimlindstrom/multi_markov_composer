@@ -24,8 +24,8 @@ describe PitchGenerator do
 
   context ".reset" do
     it "should cause the next pitch (the first in a seq) to be an observed starting pitch" do
-      note1 = Music::Note.new(Music::Pitch.new(50), Music::Duration.new(1))
-      note2 = Music::Note.new(Music::Pitch.new(55), Music::Duration.new(1))
+      note1 = MusicIR::Note.new(MusicIR::Pitch.new(50), MusicIR::Duration.new(1))
+      note2 = MusicIR::Note.new(MusicIR::Pitch.new(55), MusicIR::Duration.new(1))
       note1.analysis[:notes_left] = 2
       note2.analysis[:notes_left] = 1
 
@@ -42,8 +42,8 @@ describe PitchGenerator do
 
   context ".generate" do
     it "should return a pitch" do
-      note1 = Music::Note.new(Music::Pitch.new(50), Music::Duration.new(1))
-      note2 = Music::Note.new(Music::Pitch.new(55), Music::Duration.new(1))
+      note1 = MusicIR::Note.new(MusicIR::Pitch.new(50), MusicIR::Duration.new(1))
+      note2 = MusicIR::Note.new(MusicIR::Pitch.new(55), MusicIR::Duration.new(1))
       note1.analysis[:notes_left] = 2
       note2.analysis[:notes_left] = 1
 
@@ -54,7 +54,7 @@ describe PitchGenerator do
         critic.listen note2
       end
       pg.reset
-      pg.generate.should be_an_instance_of Music::Pitch
+      pg.generate.should be_an_instance_of MusicIR::Pitch
     end
   end
 end

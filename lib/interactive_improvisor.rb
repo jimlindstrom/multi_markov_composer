@@ -18,7 +18,13 @@ class InteractiveImprovisor
     puts "\ttraining over #{num_training_vectors} vectors" if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
       stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
-      @listener.listen stimulus_notes if !stimulus_notes.nil?
+      if stimulus_notes 
+        if stimulus_notes.any?{ |item| item.is_a?(MusicIR::Rest) }
+          puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."
+        else
+          @listener.listen stimulus_notes
+        end
+      end
     end
 
     if num_testing_vectors > 0
@@ -29,7 +35,13 @@ class InteractiveImprovisor
       num_training_vectors.times { @sensor.get_stimulus } # throw away the ones we already trained on
       until (stimulus_events = @sensor.get_stimulus).nil?
         stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
-        @listener.listen(stimulus_notes, do_logging=true) if !stimulus_notes.nil?
+      if stimulus_notes 
+        if stimulus_notes.any?{ |item| item.is_a?(MusicIR::Rest) }
+          puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."
+        else
+          @listener.listen(stimulus_notes, do_logging=true)
+        end
+      end
       end
     end
 
@@ -58,20 +70,24 @@ class InteractiveImprovisor
     puts "Listening..." if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
       stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
-      @listener.listen stimulus_notes
+      if stimulus_notes.any?{ |item| item.is_a?(MusicIR::Rest) }
+        puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."
+      else
+        @listener.listen stimulus_notes
 
-      puts "Improvising..." if LOGGING
-      response_notes = @improvisor.generate # FIXME: make this not train
-      @listener.listen(stimulus_notes, do_logging=true) if !stimulus_notes.nil?
-		# FIXME: this is only here to print it out.  make this not train...
-
-      max_tempo = 450
-      min_tempo = 300
-      response_notes.tempo = min_tempo + (rand*(max_tempo-min_tempo)).round
-      response_notes.tempo *= response_notes.first.analysis[:beat_position].subbeats_per_beat # scale up tempo to keep it interesting
-      puts "\ttempo: #{response_notes.tempo}" if LOGGING
-      response_events = response_notes.to_event_queue
-      @performer.perform response_events
+        puts "Improvising..." if LOGGING
+        response_notes = @improvisor.generate # FIXME: make this not train
+        @listener.listen(stimulus_notes, do_logging=true) if !stimulus_notes.nil?
+  		# FIXME: this is only here to print it out.  make this not train...
+  
+        max_tempo = 450
+        min_tempo = 300
+        response_notes.tempo = min_tempo + (rand*(max_tempo-min_tempo)).round
+        response_notes.tempo *= response_notes.first.analysis[:beat_position].subbeats_per_beat # scale up tempo to keep it interesting
+        puts "\ttempo: #{response_notes.tempo}" if LOGGING
+        response_events = response_notes.to_event_queue
+        @performer.perform response_events
+      end
 
       puts "Listening..." if LOGGING
     end

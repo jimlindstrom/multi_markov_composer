@@ -66,7 +66,7 @@ describe InteractiveImprovisor do
       num_testing_vectors  = 0
       i.train(num_training_vectors, num_testing_vectors)
       use_real_midi=false
-      i.run(use_real_midi)
+      #i.run(use_real_midi) ## FIXME: I no longer want this to do any real-time midi I/O.
       pending("still need to test side effects")
     end
   end

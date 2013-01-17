@@ -28,15 +28,18 @@ class DurationGenerator
                  @duration_and_beat_position_critic,
                  @complex_duration_critic ]
 
-    @custom_duration_critic = CustomDurationCritic.new(order=3)
-    @custom_duration_and_beat_position_critic = CustomDurationAndBeatPositionCritic.new(order=2, lookahead=3)
-    @custom_complex_duration_critic = 
-      CustomComplexDurationCritic.new(@custom_duration_critic, 
-                                @custom_duration_and_beat_position_critic)
+    # I'm guessing this was an attempt to allow each song to exhibit its own idioms & 
+    # tendencies, which could get mixed in with more global expectations. For now, though
+    # I'm shutting it off.
+    #@custom_duration_critic = CustomDurationCritic.new(order=3)
+    #@custom_duration_and_beat_position_critic = CustomDurationAndBeatPositionCritic.new(order=2, lookahead=3)
+    #@custom_complex_duration_critic = 
+    #  CustomComplexDurationCritic.new(@custom_duration_critic, 
+    #                            @custom_duration_and_beat_position_critic)
 
-    @critics+= [ @custom_duration_critic,
-                 @custom_duration_and_beat_position_critic,
-                 @custom_complex_duration_critic ]
+    #@critics+= [ @custom_duration_critic,
+    #             @custom_duration_and_beat_position_critic,
+    #             @custom_complex_duration_critic ]
   end
 
   def get_critics

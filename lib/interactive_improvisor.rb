@@ -15,6 +15,7 @@ class InteractiveImprovisor
   def train(num_training_vectors, num_testing_vectors)
     # FIXME: this is basically running the same thing twice, over different samples
     @sensor = FakeSensor.new($fake_sensor_vectors, num_training_vectors)
+    num_notes = 0
     puts "\ttraining over #{num_training_vectors} vectors" if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
       stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
@@ -23,29 +24,35 @@ class InteractiveImprovisor
           puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."
         else
           @listener.listen stimulus_notes
+          num_notes += stimulus_notes.length
         end
       end
     end
 
     if num_testing_vectors > 0
       @improvisor.get_critics.each { |c| c.reset_cumulative_information_content }
+      num_notes = 0
   
       @sensor = FakeSensor.new($fake_sensor_vectors, num_training_vectors+num_testing_vectors)
       puts "\ttesting over #{num_testing_vectors} vectors" if LOGGING
       num_training_vectors.times { @sensor.get_stimulus } # throw away the ones we already trained on
       until (stimulus_events = @sensor.get_stimulus).nil?
         stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
-      if stimulus_notes 
-        if stimulus_notes.any?{ |item| item.is_a?(MusicIR::Rest) }
-          puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."
-        else
-          @listener.listen(stimulus_notes, do_logging=true)
+        if stimulus_notes 
+          if stimulus_notes.any?{ |item| item.is_a?(MusicIR::Rest) }
+            puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."
+          else
+            @listener.listen(stimulus_notes, do_logging=true)
+            num_notes += stimulus_notes.length
+          end
         end
-      end
       end
     end
 
-    return @improvisor.get_critics.map { |c| { :critic=>c, :cum_information_content=>c.cumulative_information_content } }
+    return @improvisor.get_critics
+                      .map { |c| { :critic=>c, 
+                                   :cum_information_content=>c.cumulative_information_content,
+                                   :mean_information_content=>c.cumulative_information_content/num_notes.to_f } }
   end
 
   def save(folder)

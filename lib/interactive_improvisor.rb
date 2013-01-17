@@ -8,12 +8,12 @@ class InteractiveImprovisor
 
   def initialize
     @improvisor = Improvisor.new
-
-    @listener = Listener.new
+    @listener   = Listener.new
     @improvisor.get_critics.each { |c| @listener.add_critic(c) }
   end
 
   def train(num_training_vectors, num_testing_vectors)
+    # FIXME: this is basically running the same thing twice, over different samples
     @sensor = FakeSensor.new($fake_sensor_vectors, num_training_vectors)
     puts "\ttraining over #{num_training_vectors} vectors" if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
@@ -64,8 +64,9 @@ class InteractiveImprovisor
     @listener.listen(notes, do_logging=true)
   end
 
-  def run(use_real_midi=true)
-    setup(use_real_midi)
+  def run
+    @sensor = FakeSensor.new($fake_sensor_vectors, 10)
+    @performer = FakePerformer.new
 
     puts "Listening..." if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
@@ -91,28 +92,6 @@ class InteractiveImprovisor
 
       puts "Listening..." if LOGGING
     end
-
-    teardown
   end
 
-  private
-
-  def setup(use_real_midi=true)
-    if use_real_midi
-      clock      = MusicIR::Clock.new(0)
-      @sensor    = MidiSensor.new("VMPK Output", clock)
-      @sensor.set_stimulus_timeout(5.0)
-      #@performer = MidiPerformer.new("VMPK Input")
-      @performer = MidiPerformer.new("TiMidity port 0")
-    else
-      @sensor = FakeSensor.new($fake_sensor_vectors, 10)
-      @performer = FakePerformer.new
-    end
-  end
-
-  def teardown
-    @sensor.close if @sensor.class == MidiSensor
-    @performer.close if @performer.class == MidiPerformer
-  end
-  
 end

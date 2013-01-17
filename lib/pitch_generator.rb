@@ -24,16 +24,16 @@ end
 class PitchGenerator
   def initialize
     @pitch_critic = PitchCritic.new(order=2)
-    @interval_critic = IntervalCritic.new(order=3, lookahead=3)
-    @pitch_and_pitch_class_set_critic = PitchAndPitchClassSetCritic.new(order=3, lookahead=3)
-    @complex_pitch_critic = ComplexPitchCritic.new(@pitch_critic, 
-                                                   @interval_critic, 
-                                                   @pitch_and_pitch_class_set_critic)
+    #@interval_critic = IntervalCritic.new(order=3, lookahead=3)
+    #@pitch_and_pitch_class_set_critic = PitchAndPitchClassSetCritic.new(order=3, lookahead=3)
+    #@complex_pitch_critic = ComplexPitchCritic.new(@pitch_critic, 
+    #                                               @interval_critic, 
+    #                                               @pitch_and_pitch_class_set_critic)
 
-    @critics = [ @pitch_critic,
-                 @interval_critic,
-                 @pitch_and_pitch_class_set_critic,
-                 @complex_pitch_critic ]
+    @critics = [ @pitch_critic ]#,
+    #             @interval_critic,
+    #             @pitch_and_pitch_class_set_critic,
+    #             @complex_pitch_critic ]
 
     # I'm guessing this was an attempt to allow each song to exhibit its own idioms & 
     # tendencies, which could get mixed in with more global expectations. For now, though
@@ -60,7 +60,8 @@ class PitchGenerator
   end
 
   def generate
-    expectations = @complex_pitch_critic.get_expectations
+    #expectations = @complex_pitch_critic.get_expectations
+    expectations = @pitch_critic.get_expectations
     x = expectations.choose_outcome
     return MusicIR::Pitch.new(x) if !x.nil?
 

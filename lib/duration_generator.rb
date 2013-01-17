@@ -19,14 +19,14 @@ end
 class DurationGenerator
   def initialize
     @duration_critic = DurationCritic.new(order=3)
-    @duration_and_beat_position_critic = DurationAndBeatPositionCritic.new(order=2, lookahead=3)
-    @complex_duration_critic = 
-      ComplexDurationCritic.new(@duration_critic, 
-                                @duration_and_beat_position_critic)
+    #@duration_and_beat_position_critic = DurationAndBeatPositionCritic.new(order=2, lookahead=3)
+    #@complex_duration_critic = 
+    #  ComplexDurationCritic.new(@duration_critic, 
+    #                            @duration_and_beat_position_critic)
 
-    @critics = [ @duration_critic,
-                 @duration_and_beat_position_critic,
-                 @complex_duration_critic ]
+    @critics = [ @duration_critic ]#,
+    #             @duration_and_beat_position_critic,
+    #             @complex_duration_critic ]
 
     # I'm guessing this was an attempt to allow each song to exhibit its own idioms & 
     # tendencies, which could get mixed in with more global expectations. For now, though
@@ -51,7 +51,8 @@ class DurationGenerator
   end
 
   def generate
-    expectations = @complex_duration_critic.get_expectations
+    #expectations = @complex_duration_critic.get_expectations
+    expectations = @duration_critic.get_expectations
     x = expectations.choose_outcome
     return MusicIR::Duration.new(x) if !x.nil?
 

@@ -25,7 +25,7 @@ class PitchCritic
   def information_content(note)
     raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
     next_symbol = note.pitch.to_symbol
-    expectations = @markov_chain.get_expectations
+    expectations = get_expectations
     if expectations.num_observations > 0
       information_content = expectations.information_content(next_symbol.val)
     else

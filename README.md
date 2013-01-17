@@ -1,8 +1,6 @@
-## Overview
+# Markov Composer
 
-RubyMidi lets you interact with a computer improvisor.  After training itself, it listens for stimuli
-from you (over MIDI) and then generates responses of its own.  It uses the ruby portmidi library to 
-interface with Linux midi tools such as Timidity, VPMK, etc.  
+This project is about exploring the application to music composition of a [multiple viewpoint](http://scholar.google.com/scholar?q=multiple+viewpoint+music&btnG=&hl=en&as_sdt=0%2C33) system that uses complex markov chains to model individual viewpoints (e.g., pitch intervals, inter-onset intervals, etc).
 
 ## Ideas I'm exploring
 
@@ -42,18 +40,4 @@ statistics.  Currently the improvisor looks for minimal-surprise improvisations,
 statistically plausible output.  Eventually, I'd like to have a 'surprise critic', which listens to all 
 the other critics and learns about the ebb and flow of intentional surprise.  This could allow the
 improvisor to generate much more interesting output.
-
-## Usage
-
-     cd improv   # move into the improv sub-project
-     vmpk &      # start 'Virtual Midi Piano Keyboard', which you use to interact with the program
-     ./improv.rb 
-     # Wait for the improv'er to finish training
-     # Then, begin playing in VPMK.  When you don't do anything for a few seconds, it times out and exits
-
-## Some dependencies:
-
-     sudo apt-get install libportmidi-dev   # for the ruby wrapper of portmidi
-     sudo apt-get install alsa              # for connecting midi devices to one another
-     sudo modprobe snd-virmidi snd_index=1  # for doing loopback testing
 

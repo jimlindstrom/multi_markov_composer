@@ -12,7 +12,7 @@ describe DurationCritic do
       dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
       dc.reset
       x = dc.get_expectations
-      MusicIR::Duration.new(x.choose_outcome).val.should == 1
+      MusicIR::Duration.new(x.sample).val.should == 1
     end
   end
 
@@ -33,7 +33,7 @@ describe DurationCritic do
       dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(0)))
       dc.reset
       x = dc.get_expectations
-      x.information_content(1).should be < x.information_content(0)
+      x.information_content_for(1).should be < x.information_content_for(0)
     end
     it "returns a random variable that only chooses states observed" do
       order = 1
@@ -41,7 +41,7 @@ describe DurationCritic do
       dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
       dc.reset
       x = dc.get_expectations
-      MusicIR::Duration.new(x.choose_outcome).val.should == 1
+      MusicIR::Duration.new(x.sample).val.should == 1
     end
     it "returns a random variable that only chooses states observed (higher order)" do
       order = 3
@@ -60,7 +60,7 @@ describe DurationCritic do
       dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(2)))
       dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(3)))
       x = dc.get_expectations
-      MusicIR::Duration.new(x.choose_outcome).val.should == 4
+      MusicIR::Duration.new(x.sample).val.should == 4
     end
   end
 

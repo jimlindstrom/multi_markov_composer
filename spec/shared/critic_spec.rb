@@ -116,7 +116,7 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
       @c2.cumulative_information_content.should be_within(0.0001).of(0.0)
     end
     it "should load a saved file, and have the same expecations" do
-      @c.get_expectations.choose_outcome.should == @c2.get_expectations.choose_outcome
+      @c.get_expectations.sample.should == @c2.get_expectations.sample
     end
   end
 
@@ -185,7 +185,7 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
 #      pc.reset
 #      x = pc.get_expectations
-#      MusicIR::Pitch.new(x.choose_outcome).val.should == 1
+#      MusicIR::Pitch.new(x.sample).val.should == 1
 #    end
 #    it "returns a random variable that only chooses states observed (higher order)" do
 #      order = 3
@@ -204,7 +204,7 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
 #      x = pc.get_expectations
-#      MusicIR::Pitch.new(x.choose_outcome).val.should == 4
+#      MusicIR::Pitch.new(x.sample).val.should == 4
 #    end
   end
 

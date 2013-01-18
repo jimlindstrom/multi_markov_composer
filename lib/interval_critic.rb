@@ -1,19 +1,27 @@
 #!/usr/bin/env ruby
 
+class IntervalAlphabet < Markov::LiteralAlphabet
+  def initialize
+    letters = (0..(MusicIR::Interval.num_values-1)).to_a
+    super(letters)
+  end
+end
+
 class IntervalCritic
   include CriticWithInfoContent
 
   def initialize(order, lookahead)
     reset_cumulative_information_content
-    @markov_chain = Markov::AsymmetricBidirectionalBackoffMarkovChain.new(order, 
-                                                                        lookahead,
-                                                                        num_states=MusicIR::Interval.num_values, 
-                                                                        num_outcomes=MusicIR::Interval.num_values)
+    klass = Markov::AsymmetricBidirectionalBackoffMarkovChain
+    @markov_chain = klass.new(IntervalAlphabet.new,
+                              order, 
+                              lookahead,
+                              num_states=MusicIR::Interval.num_values)
     reset
   end
 
   def reset
-    @markov_chain.reset
+    @markov_chain.reset!
     @note_history = []
   end
 
@@ -42,9 +50,9 @@ class IntervalCritic
     if tmp_note_history.length >= 2
       interval = MusicIR::Interval.calculate(tmp_note_history[-1].pitch, tmp_note_history[-2].pitch)
       next_symbol = interval.to_symbol
-	  expectations = @markov_chain.get_expectations
+	  expectations = get_expectations
 	  if expectations.num_observations > 0
-	    information_content = expectations.information_content(next_symbol.val)
+	    information_content = expectations.information_content_for(next_symbol.val)
 	  else
         information_content = Markov::RandomVariable.max_information_content
 	  end
@@ -63,18 +71,18 @@ class IntervalCritic
       interval = MusicIR::Interval.calculate(@note_history[-1].pitch, @note_history[-2].pitch)
       @note_history.pop
       next_symbol = interval.to_symbol
-      @markov_chain.observe(next_symbol.val, note.analysis[:notes_left])
-      @markov_chain.transition(next_symbol.val, note.analysis[:notes_left])
+      @markov_chain.observe!(next_symbol.val, note.analysis[:notes_left])
+      @markov_chain.transition!(next_symbol.val, note.analysis[:notes_left])
     end
   end
 
   def get_expectations
     return nil if @note_history.empty?
 
-    r = @markov_chain.get_expectations
-    symbol_to_outcome = lambda { |x| MusicIR::IntervalSymbol.new(x).to_object.val + @note_history[-1].pitch.val }
-    outcome_to_symbol = lambda { |x| MusicIR::Interval.new(x - @note_history[-1].pitch.val).to_symbol.val }
-    r.transform_outcomes(symbol_to_outcome, outcome_to_symbol)
-    return r
+    @markov_chain.expectations
+    #symbol_to_outcome = lambda { |x| MusicIR::IntervalSymbol.new(x).to_object.val + @note_history[-1].pitch.val }
+    #outcome_to_symbol = lambda { |x| MusicIR::Interval.new(x - @note_history[-1].pitch.val).to_symbol.val }
+    #r.transform_outcomes(symbol_to_outcome, outcome_to_symbol)
+    #return r
   end
 end

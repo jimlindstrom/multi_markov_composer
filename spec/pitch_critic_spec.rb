@@ -12,8 +12,8 @@ describe PitchCritic do
       pc = PitchCritic.new(order)
       pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
       pc.reset
-      x = pc.get_expectations
-      MusicIR::Pitch.new(x.choose_outcome).val.should == 1
+      x = pc.expectations
+      MusicIR::Pitch.new(x.sample).val.should == 1
     end
   end
 
@@ -32,7 +32,7 @@ describe PitchCritic do
       pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(0)))
       pc.reset
       x = pc.get_expectations
-      x.information_content(1).should be < x.information_content(0)
+      x.information_content_for(1).should be < x.information_content_for(0)
     end
     it "returns a random variable that only chooses states observed" do
       order = 1
@@ -40,7 +40,7 @@ describe PitchCritic do
       pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
       pc.reset
       x = pc.get_expectations
-      MusicIR::Pitch.new(x.choose_outcome).val.should == 1
+      MusicIR::Pitch.new(x.sample).val.should == 1
     end
     it "returns a random variable that only chooses states observed (higher order)" do
       order = 3
@@ -59,7 +59,7 @@ describe PitchCritic do
       pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
       pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
       x = pc.get_expectations
-      MusicIR::Pitch.new(x.choose_outcome).val.should == 4
+      MusicIR::Pitch.new(x.sample).val.should == 4
     end
   end
 

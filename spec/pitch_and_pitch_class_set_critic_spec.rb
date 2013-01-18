@@ -21,7 +21,7 @@ describe PitchAndPitchClassSetCritic do
       ppcs.listen(@nq1.first)
       ppcs.reset
       x = ppcs.get_expectations
-      MusicIR::Pitch.new(x.choose_outcome).val.should == @nq1.first.pitch.val
+      MusicIR::Pitch.new(x.sample).val.should == @nq1.first.pitch.val
     end
     it "should reset the current pitch class set" do
       ppcs = PitchAndPitchClassSetCritic.new(order=2, lookahead=1)
@@ -75,7 +75,7 @@ describe PitchAndPitchClassSetCritic do
       ppcs.listen(@nq1.first)
       ppcs.reset
       x = ppcs.get_expectations
-      MusicIR::Pitch.new(*x.choose_outcome).val.should == @nq1.first.pitch.val
+      MusicIR::Pitch.new(*x.sample).val.should == @nq1.first.pitch.val
     end
   end
 

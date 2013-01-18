@@ -23,7 +23,7 @@ describe DurationAndBeatPositionCritic do
       dc.listen(@nq1.first)
       dc.reset
       x = dc.get_expectations
-      MusicIR::Duration.new(x.choose_outcome).val.should == @nq1.first.duration.val
+      MusicIR::Duration.new(x.sample).val.should == @nq1.first.duration.val
     end
   end
 
@@ -87,7 +87,7 @@ describe DurationAndBeatPositionCritic do
       dc.listen(@nq1.first)
       dc.reset
       x = dc.get_expectations
-      MusicIR::Duration.new(x.choose_outcome).val.should == 1
+      MusicIR::Duration.new(x.sample).val.should == 1
     end
   end
 

@@ -28,7 +28,7 @@ class ComplexPitchCritic
     next_symbol = note.pitch.to_symbol
     expectations = get_expectations
     if expectations.num_observations > 0
-      information_content = expectations.information_content(next_symbol.val)
+      information_content = expectations.information_content_for(next_symbol.val)
     else
       information_content = Markov::RandomVariable.max_information_content
     end

@@ -1,15 +1,22 @@
 #!/usr/bin/env ruby
 
+class DurationAlphabet < Markov::LiteralAlphabet
+  def initialize
+    letters = (0..(MusicIR::Duration.num_values-1)).to_a
+    super(letters)
+  end
+end
+
 class DurationCritic
   include CriticWithInfoContent
 
   def initialize(order)
     reset_cumulative_information_content
-    @markov_chain = Markov::MarkovChain.new(order, MusicIR::Duration.num_values)
+    @markov_chain = Markov::MarkovChain.new(DurationAlphabet.new, order)
   end
 
   def reset
-    @markov_chain.reset
+    @markov_chain.reset!
   end
 
   def save(folder)
@@ -27,7 +34,7 @@ class DurationCritic
     next_symbol = note.duration.to_symbol
     expectations = get_expectations
     if expectations.num_observations > 0
-      information_content = expectations.information_content(next_symbol.val)
+      information_content = expectations.information_content_for(next_symbol.val)
     else
       information_content = Markov::RandomVariable.max_information_content
     end
@@ -38,15 +45,15 @@ class DurationCritic
   def listen(note)
     raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
     next_symbol = note.duration.to_symbol
-    @markov_chain.observe(next_symbol.val)
-    @markov_chain.transition(next_symbol.val)
+    @markov_chain.observe!(next_symbol.val)
+    @markov_chain.transition!(next_symbol.val)
   end
 
   def get_expectations
-    r = @markov_chain.get_expectations
-    symbol_to_outcome = lambda { |x| MusicIR::DurationSymbol.new(x).to_object.val }
-    outcome_to_symbol = lambda { |x| MusicIR::Duration.new(x).to_symbol.val }
-    r.transform_outcomes(symbol_to_outcome, outcome_to_symbol)
-    return r
+    @markov_chain.expectations
+    #symbol_to_outcome = lambda { |x| MusicIR::DurationSymbol.new(x).to_object.val }
+    #outcome_to_symbol = lambda { |x| MusicIR::Duration.new(x).to_symbol.val }
+    #r.transform_outcomes(symbol_to_outcome, outcome_to_symbol)
+    #return r
   end
 end

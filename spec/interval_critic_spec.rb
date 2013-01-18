@@ -29,7 +29,7 @@ describe IntervalCritic do
       ic.listen note
 
       x = ic.get_expectations
-      MusicIR::Pitch.new(x.choose_outcome).val.should == (base_note + interval)
+      MusicIR::Pitch.new(x.sample).val.should == (base_note + interval)
     end
   end
 
@@ -140,7 +140,7 @@ describe IntervalCritic do
       ic.listen(note)
 
       x = ic.get_expectations
-      MusicIR::Pitch.new(x.choose_outcome).val.should == (base_note + interval)
+      MusicIR::Pitch.new(x.sample).val.should == (base_note + interval)
     end
     it "returns a random variable that only chooses states observed (higher order)" do
       ic = IntervalCritic.new(order=3, lookahead=1)
@@ -223,7 +223,7 @@ describe IntervalCritic do
         x = ic.get_expectations
         last_note = 7
         expected_interval = 1
-        MusicIR::Pitch.new(x.choose_outcome).val.should == (last_note + expected_interval)
+        MusicIR::Pitch.new(x.sample).val.should == (last_note + expected_interval)
       end
     end
   end

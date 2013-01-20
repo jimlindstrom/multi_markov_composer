@@ -29,12 +29,12 @@ describe Listener do
 
       c1 = PitchCritic.new(order=1)
       l.add_critic(c1)
-      c1.should_receive(:reset).once
+      c1.should_receive(:reset!).once
       c1.should_receive(:listen).exactly(@nq.length).times
 
       c2 = DurationCritic.new(order=1)
       l.add_critic(c2)
-      c2.should_receive(:reset).once
+      c2.should_receive(:reset!).once
       c2.should_receive(:listen).exactly(@nq.length).times
 
       l.listen @nq

@@ -6,7 +6,7 @@ describe Improvisor do
   before do
   end
 
-  context ".critics" do
+  describe ".critics" do
     before(:all) do
       i = Improvisor.new
       @critics = i.critics
@@ -22,7 +22,7 @@ describe Improvisor do
     end
   end
 
-  context ".generate" do
+  describe ".generate" do
     before(:each) do
       m = MusicIR::Meter.new(4, 4, 1)
   
@@ -49,6 +49,7 @@ describe Improvisor do
         @notes.each do |note|
           critic.listen note
         end
+        critic.reset!
       end
     end
     it "should return an array of notes" do

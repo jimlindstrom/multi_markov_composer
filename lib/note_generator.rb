@@ -6,15 +6,13 @@ class NoteGenerator
     @duration_generator = DurationGenerator.new
   end
 
-  def get_critics
-    critics =  @pitch_generator.get_critics 
-    critics += @duration_generator.get_critics
-    return critics
+  def critics
+    @pitch_generator.critics + @duration_generator.critics
   end
 
-  def reset
-    @pitch_generator.reset
-    @duration_generator.reset
+  def reset!
+    @pitch_generator.reset!
+    @duration_generator.reset!
   end
 
   def generate

@@ -19,10 +19,10 @@ describe NoteGenerator do
     @notes.analyze!
   end
 
-  context ".get_critics" do
+  context ".critics" do
     before(:all) do
       ng = NoteGenerator.new
-      @critics = ng.get_critics
+      @critics = ng.critics
     end
     it "should return an array containing critics" do
       @critics.should be_an_instance_of Array
@@ -35,10 +35,10 @@ describe NoteGenerator do
     end
   end
 
-  context ".reset" do
+  context ".reset!" do
     before(:each) do
       @ng = NoteGenerator.new
-      critics = @ng.get_critics
+      critics = @ng.critics
       critics.each do |critic|
         @notes.each do |note|
           critic.listen note
@@ -46,11 +46,11 @@ describe NoteGenerator do
       end
     end
     it "should cause the next pitch (the first in a seq) to be an observed starting pitch" do
-      @ng.reset
+      @ng.reset!
       @ng.generate.pitch.val.should == 50
     end
     it "should cause the next duration (the first in a seq) to be an observed starting duration" do
-      @ng.reset
+      @ng.reset!
       @ng.generate.duration.val.should == 1
     end
   end
@@ -58,13 +58,13 @@ describe NoteGenerator do
   context ".generate" do
     it "should return a note" do
       ng = NoteGenerator.new
-      critics = ng.get_critics
+      critics = ng.critics
       critics.each do |critic|
         @notes.each do |note|
           critic.listen note
         end
       end
-      ng.reset
+      ng.reset!
       ng.generate.should be_an_instance_of MusicIR::Note
     end
   end

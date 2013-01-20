@@ -6,15 +6,15 @@ describe PitchGenerator do
   before do
   end
 
-  context ".get_critics" do
+  context ".critics" do
     it "should return an array containing critics" do
       pg = PitchGenerator.new
-      critics = pg.get_critics
+      critics = pg.critics
       critics.should be_an_instance_of Array
     end
     it "should return an array containing critics" do
       pg = PitchGenerator.new
-      critics = pg.get_critics
+      critics = pg.critics
       critics.each do |critic|
         #critic.should be_a_kind_of PitchCritic
         pending
@@ -22,7 +22,7 @@ describe PitchGenerator do
     end
   end
 
-  context ".reset" do
+  context ".reset!" do
     it "should cause the next pitch (the first in a seq) to be an observed starting pitch" do
       note1 = MusicIR::Note.new(MusicIR::Pitch.new(50), MusicIR::Duration.new(1))
       note2 = MusicIR::Note.new(MusicIR::Pitch.new(55), MusicIR::Duration.new(1))
@@ -30,12 +30,12 @@ describe PitchGenerator do
       note2.analysis[:notes_left] = 1
 
       pg = PitchGenerator.new
-      critics = pg.get_critics
+      critics = pg.critics
       critics.each do |critic|
         critic.listen note1
         critic.listen note2
       end
-      pg.reset
+      pg.reset!
       pg.generate.val.should == 50
     end
   end
@@ -48,12 +48,12 @@ describe PitchGenerator do
       note2.analysis[:notes_left] = 1
 
       pg = PitchGenerator.new
-      critics = pg.get_critics
+      critics = pg.critics
       critics.each do |critic|
         critic.listen note1
         critic.listen note2
       end
-      pg.reset
+      pg.reset!
       pg.generate.should be_an_instance_of MusicIR::Pitch
     end
   end

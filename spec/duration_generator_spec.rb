@@ -19,15 +19,15 @@ describe DurationGenerator do
     @notes.analyze!
   end
 
-  context ".get_critics" do
+  context ".critics" do
     it "should return an array containing critics" do
       pg = PitchGenerator.new
-      critics = pg.get_critics
+      critics = pg.critics
       critics.should be_an_instance_of Array
     end
     it "should return an array containing critics" do
       pg = PitchGenerator.new
-      critics = pg.get_critics
+      critics = pg.critics
       critics.each do |critic|
         #critic.should be_a_kind_of Critic
         pending
@@ -35,16 +35,16 @@ describe DurationGenerator do
     end
   end
 
-  context ".reset" do
+  context ".reset!" do
     it "should cause the next duration (the first in a seq) to be an observed starting duration" do
       dg = DurationGenerator.new
-      critics = dg.get_critics
+      critics = dg.critics
       critics.each do |critic|
         @notes.each do |note|
           critic.listen note 
         end
       end
-      dg.reset
+      dg.reset!
       dg.generate.val.should == 1
     end
   end
@@ -52,13 +52,13 @@ describe DurationGenerator do
   context ".generate" do
     it "should return a duration" do
       dg = DurationGenerator.new
-      critics = dg.get_critics
+      critics = dg.critics
       critics.each do |critic|
         @notes.each do |note|
           critic.listen note 
         end
       end
-      dg.reset
+      dg.reset!
       dg.generate.should be_an_instance_of MusicIR::Duration
     end
   end

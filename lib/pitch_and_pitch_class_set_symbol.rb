@@ -15,38 +15,24 @@ module MusicIR
     end
   
     def to_symbol
-      v  = @pitch.to_symbol.val
+      v  = @pitch.to_symbol
   
       v *= PitchClassSet.num_values
       v += @pitch_class_set.to_symbol.val
   
-      return PitchAndPitchClassSetSymbol.new(v)
+      return v
+    end
+
+    def self.from_symbol(sym)
+      pcss = (@val % PitchClassSet.num_values)
+      ps   = (@val / PitchClassSet.num_values).floor
+      PitchAndPitchClassSet.new(ps, pcss)
+    end
+
+    def self.alphabet
+      Markov::LiteralAlphabet.new( (0..(self.num_values-1)).to_a )
     end
   end
  
-  class PitchAndPitchClassSetSymbol
-    def initialize(new_val)
-      set_val(new_val)
-    end
-  
-    def set_val(new_val)
-      raise ArgumentError.new("value cannot be negative") if new_val < 0
-      raise ArgumentError.new("value cannot be >= #{PitchAndPitchClassSet.num_values}") if new_val >= PitchAndPitchClassSet.num_values
-  
-      @val = new_val
-    end
-  
-    def val
-      return @val
-    end
-  
-    def to_object
-      pcss = PitchClassSetSymbol.new(@val % PitchClassSet.num_values)
-      ps   = PitchSymbol.new((@val / PitchClassSet.num_values).floor)
-      ppcs = PitchAndPitchClassSet.new(ps.to_object, pcss.to_object)
-      return ppcs
-    end
-  end
-
 end
 

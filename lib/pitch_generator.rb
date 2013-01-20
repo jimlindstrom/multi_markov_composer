@@ -51,16 +51,16 @@ class PitchGenerator
     #             @custom_complex_pitch_critic ]
   end
 
-  def get_critics
+  def critics
     return @critics
   end
 
-  def reset
-    @critics.each { |x| x.reset }
+  def reset!
+    @critics.each { |x| x.reset! }
   end
 
   def generate
-    expectations = @complex_pitch_critic.get_expectations
+    expectations = @complex_pitch_critic.expectations
     x = expectations.sample
     return MusicIR::Pitch.new(x) if !x.nil?
 

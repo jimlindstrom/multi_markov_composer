@@ -11,7 +11,7 @@ class ComplexPitchCritic
     @pitch_and_pitch_class_set_critic = pitch_and_pitch_class_set_critic
   end
 
-  def reset
+  def reset!
     # do nothing...
   end
 
@@ -23,12 +23,12 @@ class ComplexPitchCritic
     # do nothing...
   end
 
-  def information_content(note)
+  def information_content_for(note)
     raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
     next_symbol = note.pitch.to_symbol
-    expectations = get_expectations
-    if expectations.num_observations > 0
-      information_content = expectations.information_content_for(next_symbol.val)
+    _expectations = expectations
+    if _expectations.num_observations > 0
+      information_content = _expectations.information_content_for(next_symbol)
     else
       information_content = Markov::RandomVariable.max_information_content
     end
@@ -40,9 +40,9 @@ class ComplexPitchCritic
     # do nothing
   end
 
-  def get_expectations
-    e1 = @pitch_and_pitch_class_set_critic.get_expectations
-    e2 = @interval_critic.get_expectations
+  def expectations
+    e1 = @pitch_and_pitch_class_set_critic.expectations
+    e2 = @interval_critic.expectations
 
     if !e1.nil? and !e2.nil?
       # NOTE: when multiplying instead of adding these expecations, the 
@@ -58,11 +58,11 @@ class ComplexPitchCritic
 
     return expectations if expectations.num_observations > 0
 
-    expectations = @pitch_critic.get_expectations
+    expectations = @pitch_critic.expectations
     return expectations if expectations.num_observations > 0
 
-    @pitch_critic.reset # we got to a point where we have no data.  reset, to get back to some stat we know about
-    expectations = @pitch_critic.get_expectations
+    @pitch_critic.reset! # we got to a point where we have no data.  reset, to get back to some stat we know about
+    expectations = @pitch_critic.expectations
     return expectations
   end
 end

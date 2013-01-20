@@ -1,3 +1,5 @@
+require 'yaml'
+
 require 'markov'
 require 'music_ir'
 

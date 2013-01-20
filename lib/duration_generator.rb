@@ -42,17 +42,17 @@ class DurationGenerator
     #             @custom_complex_duration_critic ]
   end
 
-  def get_critics
+  def critics
     return @critics
   end
 
-  def reset
-    @critics.each { |x| x.reset }
+  def reset!
+    @critics.each { |x| x.reset! }
   end
 
   def generate
-    #expectations = @complex_duration_critic.get_expectations
-    expectations = @duration_critic.get_expectations
+    #expectations = @complex_duration_critic.expectations
+    expectations = @duration_critic.expectations
     x = expectations.sample
     return MusicIR::Duration.new(x) if !x.nil?
 

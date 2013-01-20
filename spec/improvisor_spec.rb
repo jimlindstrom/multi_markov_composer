@@ -6,10 +6,10 @@ describe Improvisor do
   before do
   end
 
-  context ".get_critics" do
+  context ".critics" do
     before(:all) do
       i = Improvisor.new
-      @critics = i.get_critics
+      @critics = i.critics
     end
     it "should return an array containing critics" do
       @critics.should be_an_instance_of Array
@@ -43,9 +43,9 @@ describe Improvisor do
       @notes.analyze!
 
       @i = Improvisor.new
-      critics = @i.get_critics
+      critics = @i.critics
       critics.each do |critic|
-        critic.reset
+        critic.reset!
         @notes.each do |note|
           critic.listen note
         end

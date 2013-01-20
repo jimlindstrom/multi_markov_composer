@@ -3,116 +3,114 @@
 require 'spec_helper'
 
 describe IntervalCritic do
-  it_should_behave_like "a critic", IntervalCritic, [order=2, lookahead=1], "data/test/interval_critic_#{order}_#{lookahead}.yml"
+  it_should_behave_like "a critic", IntervalCritic, [order=2, lookahead=1], "data/test/interval_critic_#{order}_#{lookahead}.json"
 
-  context ".reset" do
+  describe ".reset!" do
+    subject { IntervalCritic.new(order=2, lookahead=1) }
+    let(:base_note1) { (rand*50).floor + 25 }
+    let(:base_note3) { (rand*50).floor + 25 }
+    let(:interval)  { (rand*20).floor - 10 }
+    before do
+      note1 = MusicIR::Note.new(MusicIR::Pitch.new(base_note1), MusicIR::Duration.new(1))
+      note1.analysis[:notes_left] = 2
+
+      note2 = MusicIR::Note.new(MusicIR::Pitch.new(base_note1 + interval), MusicIR::Duration.new(1))
+      note2.analysis[:notes_left] = 1
+
+      note3 = MusicIR::Note.new(MusicIR::Pitch.new(base_note3), MusicIR::Duration.new(1))
+      note3.analysis[:notes_left] = 2
+
+      subject.listen note1
+      subject.listen note2
+      subject.reset!
+      subject.listen note3
+    end
+
     it "should reset to the state in which no notes have been heard yet" do
-      ic = IntervalCritic.new(order=2, lookahead=1)
-
-      base_note = (rand*50).floor + 25
-      interval = (rand*20).floor - 10
-
-      note = MusicIR::Note.new(MusicIR::Pitch.new(base_note), MusicIR::Duration.new(1))
-      note.analysis[:notes_left] = 2
-      ic.listen note
-
-      note = MusicIR::Note.new(MusicIR::Pitch.new(base_note + interval), MusicIR::Duration.new(1))
-      note.analysis[:notes_left] = 1
-      ic.listen note
-
-      ic.reset
-
-      base_note = (rand*50).floor + 25
-
-      note = MusicIR::Note.new(MusicIR::Pitch.new(base_note), MusicIR::Duration.new(1))
-      note.analysis[:notes_left] = 2
-      ic.listen note
-
-      x = ic.get_expectations
-      MusicIR::Pitch.new(x.sample).val.should == (base_note + interval)
+      (MusicIR::Pitch.new(subject.expectations.sample).val - base_note3).should == interval
     end
   end
 
-  context ".listen" do
+  describe ".listen" do
     it "should raise an error if the note analysis does not contain notes_left" do
       ic = IntervalCritic.new(order=2, lookahead=1)
       expect { ic.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0))) }.to raise_error
     end
   end
 
-  context ".information_content" do
+  describe ".information_content_for" do
     it "should raise an error if the note analysis does not contain notes_left" do
       ic = IntervalCritic.new(order=2, lookahead=1)
-      expect { ic.information_content(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0))) }.to raise_error
+      expect { ic.information_content_for(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0))) }.to raise_error
     end
     it "should return nil, if zero notes have been heard" do
       ic = IntervalCritic.new(order=2, lookahead=1)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      ic.information_content(note).should be_nil
+      ic.information_content_for(note).should be_nil
     end
     it "should return the information_content associated with the given note, if 1 or more notes have been heard" do
       ic = IntervalCritic.new(order=2, lookahead=1)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      ic.information_content(note)
+      ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(9), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 2
-      ic.information_content(note).should be_within(0.001).of(Markov::RandomVariable.max_information_content)
+      ic.information_content_for(note).should be_within(0.001).of(Markov::RandomVariable.max_information_content)
     end
   end
 
-  context ".get_expectations" do
+  describe ".expectations" do
     it "returns a random variable that is less information_contentd about states observed more often" do
       ic = IntervalCritic.new(order=2, lookahead=1)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 2
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      ic.reset
+      ic.reset!
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 2
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      ic.reset
+      ic.reset!
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 2
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      ic.reset
+      ic.reset!
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      x = ic.get_expectations
-      x.information_content(MusicIR::Pitch.new(1).val).should be < x.information_content(MusicIR::Pitch.new(0).val)
+      x = ic.expectations
+      x.information_content_for(MusicIR::Pitch.new(1).val).should be < x.information_content_for(MusicIR::Pitch.new(0).val)
     end
     it "returns a random variable that only chooses states observed" do
       ic = IntervalCritic.new(order=2, lookahead=1)
@@ -122,24 +120,24 @@ describe IntervalCritic do
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(base_note), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(base_note + interval), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 2
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      ic.reset
+      ic.reset!
 
       base_note = (rand*50).floor + 25
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(base_note), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 3
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      x = ic.get_expectations
+      x = ic.expectations
       MusicIR::Pitch.new(x.sample).val.should == (base_note + interval)
     end
     it "returns a random variable that only chooses states observed (higher order)" do
@@ -147,80 +145,80 @@ describe IntervalCritic do
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 8
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 7
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 6
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 5
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(1)) # 3
       note.analysis[:notes_left] = 4
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      ic.reset
+      ic.reset!
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 8
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(5), MusicIR::Duration.new(1)) # 5
       note.analysis[:notes_left] = 7
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 6
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(7), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 5
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(8), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 4
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
-      ic.reset
+      ic.reset!
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1))
       note.analysis[:notes_left] = 8
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(5), MusicIR::Duration.new(1)) # 5
       note.analysis[:notes_left] = 7
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 6
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       note = MusicIR::Note.new(MusicIR::Pitch.new(7), MusicIR::Duration.new(1)) # 1
       note.analysis[:notes_left] = 5
-      dummy = ic.information_content(note)
+      dummy = ic.information_content_for(note)
       ic.listen(note)
 
       10.times do # it's probabalistic, so let's try it a few times
-        x = ic.get_expectations
+        x = ic.expectations
         last_note = 7
         expected_interval = 1
         MusicIR::Pitch.new(x.sample).val.should == (last_note + expected_interval)

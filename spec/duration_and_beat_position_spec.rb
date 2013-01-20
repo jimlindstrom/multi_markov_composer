@@ -18,15 +18,15 @@ describe MusicIR::DurationAndBeatPosition do
   context "to_symbol" do
     it "should return a DurationAndBeatPositionSymbol" do
       dbp = MusicIR::DurationAndBeatPosition.new(@d, @bp)
-      dbp.to_symbol.should be_an_instance_of MusicIR::DurationAndBeatPositionSymbol
+      dbp.to_symbol.should be_an_instance_of Fixnum
     end
     it "should return a DurationAndBeatPositionSymbol whose duration corresponds to the DurationAndBeatPosition's duration" do
       dbp = MusicIR::DurationAndBeatPosition.new(@d, @bp)
-      dbp.to_symbol.to_object.duration.val.should == dbp.duration.val
+      MusicIR::DurationAndBeatPosition.from_symbol(dbp.to_symbol).duration.val.should == dbp.duration.val
     end
     it "should return a DurationAndBeatPositionSymbol whose beat position corresponds to the DurationAndBeatPosition's beat position" do
       dbp = MusicIR::DurationAndBeatPosition.new(@d, @bp)
-      dbp.to_symbol.to_object.beat_position.to_hash.should == dbp.beat_position.to_hash
+      MusicIR::DurationAndBeatPosition.from_symbol(dbp.to_symbol).beat_position.to_hash.should == dbp.beat_position.to_hash
     end
   end
 

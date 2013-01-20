@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'spec/vectors/fake_sensor_vectors'
+require 'spec/vectors/fake_sensor_vectors' unless $SKIP_FAKE_SENSORS
 
 class InteractiveImprovisor
 
@@ -9,7 +9,7 @@ class InteractiveImprovisor
   def initialize
     @improvisor = Improvisor.new
     @listener   = Listener.new
-    @improvisor.get_critics.each { |c| @listener.add_critic(c) }
+    @improvisor.critics.each { |c| @listener.add_critic(c) }
   end
 
   def train(num_training_vectors, num_testing_vectors)
@@ -30,7 +30,7 @@ class InteractiveImprovisor
     end
 
     if num_testing_vectors > 0
-      @improvisor.get_critics.each { |c| c.reset_cumulative_information_content }
+      @improvisor.critics.each { |c| c.reset_cumulative_information_content }
       num_notes = 0
   
       @sensor = FakeSensor.new($fake_sensor_vectors, num_training_vectors+num_testing_vectors)
@@ -49,18 +49,18 @@ class InteractiveImprovisor
       end
     end
 
-    return @improvisor.get_critics
+    return @improvisor.critics
                       .map { |c| { :critic=>c, 
                                    :cum_information_content=>c.cumulative_information_content,
                                    :mean_information_content=>c.cumulative_information_content/num_notes.to_f } }
   end
 
   def save(folder)
-    @improvisor.get_critics.each { |c| c.save(folder) }
+    @improvisor.critics.each { |c| c.save(folder) }
   end
 
   def load(folder)
-    @improvisor.get_critics.each { |c| c.load(folder) }
+    @improvisor.critics.each { |c| c.load(folder) }
   end
 
   def get_single_improvisation

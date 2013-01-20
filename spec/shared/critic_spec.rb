@@ -26,65 +26,48 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
     end
   end
 
-  context ".new" do
+  describe ".new" do
     it "should return a critic" do
       class_type.new(*params_for_new).should be_an_instance_of class_type
     end
   end
 
-  context ".information_content" do
-    context "the first time it hears a sequence" do
-      before(:each) do
-        @c = class_type.new(*params_for_new)
-  
-        @info_content = nil
-        while @info_content.nil? and !@notes.empty?
-          n = @notes.shift
-          @info_content = @c.information_content n
-          @c.listen n
-        end
-      end
-      it "should return the information_content associated with the given note" do
-        @info_content.should == Markov::RandomVariable.max_information_content
-      end
-      it "should add the information_content associated with the given note to the cumulative total" do
-        @c.cumulative_information_content.should == Markov::RandomVariable.max_information_content
-      end
-    end
-    context "the first time it hears a sequence" do
+  describe ".information_content_for" do
+    # add test: cumulative_information_content is only updated when this is called.. Which is weird
+    context "the second time it hears a sequence" do
       it "should be less surprised" do
         c = class_type.new(*params_for_new)
   
-        info_contents = []
+        cum_info_contents = []
   
         2.times do
-          @notes.each do |n|
-            info_content = c.information_content n
-            c.listen n
+          @notes.each do |n| 
+            dummy = c.information_content_for n 
+            c.listen n 
           end
-          info_contents.push c.cumulative_information_content
+          cum_info_contents << c.cumulative_information_content
     
-          c.reset
+          c.reset!
           c.reset_cumulative_information_content
         end
   
-        info_contents.last.should < info_contents.first
+        cum_info_contents.last.should < cum_info_contents.first
       end
     end
   end
 
-#  context ".reset" do
+#  describe ".reset!" do
 #    it "should reset to the state in which no notes have been heard yet" do
 #      pc = PitchCritic.new()
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
-#      pc.reset
-#      x = pc.get_expectations
+#      pc.reset!
+#      x = pc.expectations
 #      MusicIR::Pitch.new(x.choose_outcome).val.should == 1
 #    end
 #  end
 
-  context ".save" do
-    it "should save a file, named <folder>/<critic_name>_<params>.yml" do
+  describe ".save" do
+    it "should save a file, named <folder>/<critic_name>_<params>.json" do
       c = class_type.new(*params_for_new)
       File.delete filename if FileTest.exists? filename
       c.save "data/test"
@@ -92,18 +75,18 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
     end
   end
 
-  context ".load" do
+  describe ".load" do
     before(:each) do
       @c = class_type.new(*params_for_new)
 
       @notes.each do |n|
-        info_content = @c.information_content n
+        info_content = @c.information_content_for n
         @c.listen n
       end
-      @c.reset
+      @c.reset!
 
       @notes[0..3].each do |n|
-        info_content = @c.information_content n
+        info_content = @c.information_content_for n
         @c.listen n
       end
 
@@ -116,11 +99,11 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
       @c2.cumulative_information_content.should be_within(0.0001).of(0.0)
     end
     it "should load a saved file, and have the same expecations" do
-      @c.get_expectations.sample.should == @c2.get_expectations.sample
+      @c.expectations.sample.should == @c2.expectations.sample
     end
   end
 
-  context ".cumulative_information_content" do
+  describe ".cumulative_information_content" do
     before(:each) do
       @c = class_type.new(*params_for_new)
     end
@@ -134,10 +117,10 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
         @cum_info_content = 0.0
         3.times do
           @notes.each do |n|
-            @cum_info_content += (@c.information_content(n) || 0.0)
+            @cum_info_content += (@c.information_content_for(n) || 0.0)
             @c.listen n
           end
-          @c.reset
+          @c.reset!
         end
       end
       it "should return the sum of all information_content (since last reset)" do
@@ -154,37 +137,37 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
     end
   end
 
-  context ".get_expectations" do
+  describe ".expectations" do
     it "returns a random variable (or nil, initially)" do 
       c = class_type.new(*params_for_new)
 
       # IntervalCritic, e.g., needs to queue up 1 note before having expectations
-      while c.get_expectations.nil? and !@notes.empty? 
+      while c.expectations.nil? and !@notes.empty? 
         n = @notes.shift
-        info_content = c.information_content n
+        info_content = c.information_content_for n
         c.listen n
       end
 
-      c.get_expectations.should be_an_instance_of Markov::RandomVariable
+      c.expectations.should be_an_instance_of Markov::RandomVariable
     end
 #    it "returns a random variable that is less information_contentd about states observed more often" do
 #      order = 1
 #      pc = PitchCritic.new(order)
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
-#      pc.reset
+#      pc.reset!
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
-#      pc.reset
+#      pc.reset!
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(0)))
-#      pc.reset
-#      x = pc.get_expectations
-#      x.information_content(1).should be < x.information_content(0)
+#      pc.reset!
+#      x = pc.expectations
+#      x.information_content_for(1).should be < x.information_content_for(0)
 #    end
 #    it "returns a random variable that only chooses states observed" do
 #      order = 1
 #      pc = PitchCritic.new(order)
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(1), MusicIR::Duration.new(0)))
-#      pc.reset
-#      x = pc.get_expectations
+#      pc.reset!
+#      x = pc.expectations
 #      MusicIR::Pitch.new(x.sample).val.should == 1
 #    end
 #    it "returns a random variable that only chooses states observed (higher order)" do
@@ -194,16 +177,16 @@ shared_examples_for "a critic" do |class_type, params_for_new, filename|
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(6), MusicIR::Duration.new(0)))
-#      pc.reset
+#      pc.reset!
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(5), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(4), MusicIR::Duration.new(0)))
-#      pc.reset
+#      pc.reset!
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(5), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(2), MusicIR::Duration.new(0)))
 #      pc.listen(MusicIR::Note.new(MusicIR::Pitch.new(3), MusicIR::Duration.new(0)))
-#      x = pc.get_expectations
+#      x = pc.expectations
 #      MusicIR::Pitch.new(x.sample).val.should == 4
 #    end
   end

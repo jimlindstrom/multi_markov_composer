@@ -1,2 +1,4 @@
 *swp
 Gemfile.lock
+data/test/*yml
+data/test/*json

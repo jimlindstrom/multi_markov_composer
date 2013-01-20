@@ -7,12 +7,12 @@ class Improvisor
     @note_generator = NoteGenerator.new
   end
 
-  def get_critics
-    @note_generator.get_critics
+  def critics
+    @note_generator.critics
   end
 
   def generate
-    @note_generator.reset
+    @note_generator.reset!
     response = MusicIR::NoteQueue.new
 
     # FIXME: replace this with a critic / random variable
@@ -37,7 +37,7 @@ class Improvisor
       response.last.analysis[:notes_left] = num_notes - response.length
 
       # FIXME: there needs to be a test around this. It was missing
-      get_critics.each { |critic| critic.listen response.last } 
+      critics.each { |critic| critic.listen response.last } 
     end
 
     return response

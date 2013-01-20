@@ -14,7 +14,7 @@ class Listener
   def listen(notes, logging=false)
     return if !analyze_note_queue(notes)
 
-    @critics.each { |c| c.reset }
+    @critics.each { |c| c.reset! }
     cum_info_content = {}
     @critics.each { |c| cum_info_content[String(c.class)] = 0.0 }
 
@@ -28,7 +28,7 @@ class Listener
       if logging     
         str = to_fixed_width("#{n.pitch.val}, #{n.duration.val}")
         @critics.each do |c| 
-          info_content = c.information_content(n)
+          info_content = c.information_content_for(n)
           cum_info_content[String(c.class)] += ( info_content || 0.0 )
           str += to_fixed_width(String(info_content))
         end

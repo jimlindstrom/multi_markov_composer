@@ -15,7 +15,7 @@ describe InteractiveImprovisor do
       i = InteractiveImprovisor.new
       num_training_vectors = 2
       num_testing_vectors  = 2
-      i.train(num_training_vectors, num_testing_vectors).first.keys.should == [:critic, :cum_information_content]
+      i.train(num_training_vectors, num_testing_vectors).first.keys.should == [:critic, :cum_information_content, :mean_information_content]
     end
     it "should cause critics to get smarter and have lower cumulative information_content over testing vectors" do
       i = InteractiveImprovisor.new
@@ -33,24 +33,24 @@ describe InteractiveImprovisor do
   end
 
   context ".save" do
-    it "should save all the critices to <folder>/*critic*.yml" do
+    it "should save all the critices to <folder>/*critic*.json" do
       i = InteractiveImprovisor.new
       num_training_vectors = 5
       num_testing_vectors  = 0
       i.train(num_training_vectors, num_testing_vectors)
-      Dir[File.expand_path(File.join(File.dirname(__FILE__),"..","data","test",'*yml'))].each { |f| File.delete(f) }
+      Dir[File.expand_path(File.join(File.dirname(__FILE__),"..","data","test",'*json'))].each { |f| File.delete(f) }
       i.save "data/test"
-      Dir[File.expand_path(File.join(File.dirname(__FILE__),"..","data","test",'*yml'))].length.should > 1
+      Dir[File.expand_path(File.join(File.dirname(__FILE__),"..","data","test",'*json'))].length.should > 1
     end
   end
 
   context ".load" do
-    it "should load all the critices from <folder>/*critic*.yml" do
+    it "should load all the critices from <folder>/*critic*.json" do
       i = InteractiveImprovisor.new
       num_training_vectors = 5
       num_testing_vectors  = 0
       i.train(num_training_vectors, num_testing_vectors)
-      Dir[File.expand_path(File.join(File.dirname(__FILE__),"..","data","test",'*yml'))].each { |f| File.delete(f) }
+      Dir[File.expand_path(File.join(File.dirname(__FILE__),"..","data","test",'*json'))].each { |f| File.delete(f) }
       i.save "data/test"
 
       i2 = InteractiveImprovisor.new

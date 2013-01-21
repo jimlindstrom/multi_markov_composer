@@ -10,7 +10,7 @@ class ComplexDurationCritic
     @duration_and_beat_position_critic = duration_and_beat_position_critic
   end
 
-  def reset
+  def reset!
     # do nothing...
   end
 
@@ -22,12 +22,12 @@ class ComplexDurationCritic
     # do nothing...
   end
 
-  def information_content(note)
+  def information_content_for(note)
     raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
     next_symbol = note.duration.to_symbol
-    expectations = get_expectations
-    if expectations.num_observations > 0
-      information_content = expectations.information_content(next_symbol.val)
+    _expectations = expectations
+    if _expectations.num_observations > 0
+      information_content = _expectations.information_content_for(next_symbol)
     else
       information_content = Markov::RandomVariable.max_information_content
     end
@@ -39,18 +39,18 @@ class ComplexDurationCritic
     # do nothing...
   end
 
-  def get_expectations
+  def expectations
     # try generating from the history of {beat position; duration} symbols
-    e = @duration_and_beat_position_critic.get_expectations
+    e = @duration_and_beat_position_critic.expectations
     return e if !e.nil? and e.num_observations > 0
 
     # try generating just from the history of durations (independent of beat position)
-    e = @duration_critic.get_expectations
+    e = @duration_critic.expectations
     return e if !e.nil? and e.num_observations > 0
 
     # still no luck?  then reset and just pick a random duration
-    @duration_critic.reset
-    e = @duration_critic.get_expectations
+    @duration_critic.reset!
+    e = @duration_critic.expectations
     return e
   end
 end

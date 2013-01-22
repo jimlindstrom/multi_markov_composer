@@ -3,7 +3,9 @@
 $LOAD_PATH << '.'
 require 'rubymusic_improv'
 
-num_training_vectors = 400 # there are 1300+ available
+$MARKOV__SKIP_SLOW_ERROR_CHECKING = true 
+
+num_training_vectors = 370 # there are 1300+ available. Only ~400 are being loaded in the spec/vectors/*_short* file, though
 num_testing_vectors  =  20
 
 i = InteractiveImprovisor.new

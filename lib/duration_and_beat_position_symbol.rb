@@ -19,7 +19,7 @@ module MusicIR
     end
 
     def self.alphabet
-      Markov::LiteralAlphabet.new( (0..(MusicIR::DurationAndBeatPosition.num_values-1)).to_a )
+      @@alphabet ||= Markov::LiteralAlphabet.new( (0..(MusicIR::DurationAndBeatPosition.num_values-1)).to_a )
     end
   end
 

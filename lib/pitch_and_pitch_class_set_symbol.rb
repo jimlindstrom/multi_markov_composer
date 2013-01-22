@@ -30,7 +30,7 @@ module MusicIR
     end
 
     def self.alphabet
-      Markov::LiteralAlphabet.new( (0..(self.num_values-1)).to_a )
+      @@alphabet ||= Markov::LiteralAlphabet.new( (0..(self.num_values-1)).to_a )
     end
   end
  

@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'spec/vectors/fake_sensor_vectors' unless $SKIP_FAKE_SENSORS
+#require 'spec/vectors/fake_sensor_vectors' unless $SKIP_FAKE_SENSORS
+require 'spec/vectors/fake_sensor_vectors_short'  # only loads about 400
 
 class InteractiveImprovisor
 

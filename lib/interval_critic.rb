@@ -6,8 +6,11 @@ class IntervalCritic
   def initialize(order, lookahead)
     reset_cumulative_information_content
     klass = Markov::MarkovChain
+    klass = (order > 1) ?  Markov::AsymmetricBidirectionalBackoffMarkovChain : Markov::AsymmetricBidirectionalMarkovChain
     @markov_chain = klass.new(MusicIR::Interval.alphabet,
-                              order)
+                              MusicIR::Interval.alphabet,
+                              order,
+                              lookahead)
     reset!
   end
 
@@ -26,7 +29,8 @@ class IntervalCritic
 
   def load(folder)
     filename = "#{folder}/interval_critic_#{@markov_chain.order}_#{@markov_chain.lookahead}.json"
-    @markov_chain = Markov::MarkovChain.load(filename)
+    klass = (@markov_chain.order > 1) ?  Markov::AsymmetricBidirectionalBackoffMarkovChain : Markov::AsymmetricBidirectionalMarkovChain
+    @markov_chain = klass.load(filename)
 
     filename = "#{folder}/interval_critic_#{@markov_chain.order}_#{@markov_chain.lookahead}_note_history.yml"
     File.open(filename, 'r') { |f| @note_history = YAML::load(f) }
@@ -61,8 +65,8 @@ class IntervalCritic
       interval = MusicIR::Interval.calculate(@note_history[-1].pitch, @note_history[-2].pitch)
       @note_history.pop
       next_symbol = interval.to_symbol
-      @markov_chain.observe!(   next_symbol)
-      @markov_chain.transition!(next_symbol)
+      @markov_chain.observe!(   next_symbol, note.analysis[:notes_left])
+      @markov_chain.transition!(next_symbol, note.analysis[:notes_left])
     end
   end
 

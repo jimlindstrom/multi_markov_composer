@@ -6,7 +6,7 @@ require 'music_ir'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
 require File.join(File.dirname(__FILE__), 'lib', 'duration_symbol')
-require File.join(File.dirname(__FILE__), 'lib', 'interval_symbol')
+require File.join(File.dirname(__FILE__), 'lib', 'interval')
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_symbol')
 require File.join(File.dirname(__FILE__), 'lib', 'meter_symbol')
 require File.join(File.dirname(__FILE__), 'lib', 'beat_position_symbol')

@@ -7,6 +7,14 @@
 
 ### BETTER IMPROVS
 
+I want to capture rythmic periodicity. It shouldn't be so surprising to see long notes at the same beat position every few measures.
+
+What about using phrase detection? After the first phrase or two, subsequent ones are usually going to be the same length.
+
+Is it the case that surprise is minimized at ends of phrases? Strong pressure for antecedent resolution? 
+
+What about trying to do a critic that ties rhythmic and pitch information together? E.g., if you just hit a long note, that may unhinge pitch expectations and suggest flattening out the distribution of pitches for the next note. Likewise, if you've got strong pitch expectations (low entropy), maybe that suggests a long end-of-phrase duration.
+
 What about feeding a markov chain's recent surprise into the symbol, as a predictor
 of future outcomes. Maybe that would help model boredom & the need for occasional
 surprises. 

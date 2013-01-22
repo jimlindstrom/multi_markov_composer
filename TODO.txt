@@ -7,6 +7,18 @@
 
 ### BETTER IMPROVS
 
+What about feeding a markov chain's recent surprise into the symbol, as a predictor
+of future outcomes. Maybe that would help model boredom & the need for occasional
+surprises. 
+
+I had initially thought that would help encourage phrasing, but I don't
+think phrasing has to do with boredom/stimulation as much as it does with making
+intelligible longer-term structure, setting up longer-term expectations.
+
+I like the idea of putting in song-specific markov chains to look for repeated
+motifs/patterns in a song. I'd also want some sort of penalty (akin to boredom)
+for when a song doesn't exhibit any self-similarity and longer-term structure.
+
 Use copies of the critics that are trained on the stats in the stimulus.  That 
 way the response should be more likely to bear a resemblance to the stimulus and
 it should feel more interactive.

@@ -1,35 +1,52 @@
-### QUESTIONS
+### QUESTIONS #################################################################
 
-- Why are so few of the improvised melodies rhythmically unintelligable?
+Why are so few of the improvised melodies rhythmically unintelligable?
 
-- Why did going to a lower-order PitchAndPitchClassSetCritic improve its 
-  performance?  That indicates the backoff algorithm is probably not optimal
+### NEW CRITICS ###############################################################
 
-### BETTER IMPROVS
+How could we create critics that tie rhythmic and pitch information together? 
+	- If the current note is relatively long, that may cause human 
+	  listeners to perceive a phrase boundary. It may, therefore, be a good
+	  good idea to flatten out the distribution of expectations for the 
+	  next pitch.
+	- Similarly, if you've got very strong pitch expectations (low entropy),
+	  that may suggest a nice long end-of-phrase duration.
 
-I want to capture rythmic periodicity. It shouldn't be so surprising to see long notes at the same beat position every few measures.
+Perhaps we could explicitly model listener surprise/boredom and use that as a
+symbol in critics.
+	- This might help avoid overly bland sequences.
+	- Start with a model that takes a time-series of surprise values and
+	  outputs a discrete state, such as: normal (anything's fine), bored 
+	  (wants more surprise), recovering (doesn't want any surprise). The 
+	  response curve timing would need to be optimized by trial and error.
 
-What about using phrase detection? After the first phrase or two, subsequent ones are usually going to be the same length.
+-- I like the idea of putting in song-specific markov chains to look for repeated motifs/patterns in a song. I'd also want some sort of penalty (akin to boredom) for when a song doesn't exhibit any self-similarity and longer-term structure.
 
-Is it the case that surprise is minimized at ends of phrases? Strong pressure for antecedent resolution? 
+Whenever the piece is in an expository phase (developing new material), there
+should be a critic that ensures the chunks are intelligible (not too long, 
+clearly demarkated, statistically differentiated).  How to do that?
+	- And actually this gets at an interesting point. There are certain
+	  free parameters in a composition that are like hidden markov 
+	  states--they are not directly observable, but can be estimated from
+	  the observable. Meter and beat position are two. Pitch class sets are
+	  another. 
+	- Right now the codebase is kind of sneakily analyzing meter and 
+	  pitch class, versus treating them as first-class properties. Likewise
+	  the code currently instantiates meter explicitly, but does not do so 
+	  for pitch class set. I think that the composer should model not only
+	  these properties more explicitly, but also superstructure. 
 
-What about trying to do a critic that ties rhythmic and pitch information together? E.g., if you just hit a long note, that may unhinge pitch expectations and suggest flattening out the distribution of pitches for the next note. Likewise, if you've got strong pitch expectations (low entropy), maybe that suggests a long end-of-phrase duration.
+### BETTER IMPROVS ############################################################
 
-What about feeding a markov chain's recent surprise into the symbol, as a predictor
-of future outcomes. Maybe that would help model boredom & the need for occasional
-surprises. 
+- Why is the ComplexDurationCritic so surprised whenever there's a longer note? 
+-- INV: Are quarter notes being treated the same across all meters?
+-- I want to capture rythmic periodicity. It shouldn't be so surprising to see long notes at the same beat position every few measures. What about using a within-song suffix structure to create samae-song, longer-term expectations?
+-- What about using phrase detection? After the first phrase or two (which are set off by demarcation--long notes, big surprises, etc), subsequent ones are usually going to be seen by cross-similarity (e.g., the same length, similar notes/durations).
+--Is it the case that surprise is minimized at ends of phrases? Strong pressure for antecedent resolution? 
 
-I had initially thought that would help encourage phrasing, but I don't
-think phrasing has to do with boredom/stimulation as much as it does with making
-intelligible longer-term structure, setting up longer-term expectations.
+### CALL-AND-RESPONSE ##########################################################
 
-I like the idea of putting in song-specific markov chains to look for repeated
-motifs/patterns in a song. I'd also want some sort of penalty (akin to boredom)
-for when a song doesn't exhibit any self-similarity and longer-term structure.
-
-Use copies of the critics that are trained on the stats in the stimulus.  That 
-way the response should be more likely to bear a resemblance to the stimulus and
-it should feel more interactive.
+Use copies of the critics that are trained on the stats in the stimulus.  That way the response should be more likely to bear a resemblance to the stimulus and it should feel more interactive.
 
 How can the improvs contain repeated motifs?
 	- use two copies of every critic.  One is trained on long-term inputs.  The
@@ -79,7 +96,7 @@ I'd like to build layers of assumptions and fall-back as needed.
 	- Then if that fails, look for consistent pitch class sets.  
 	- And if all else fails ... no idea.
 
-### REFACTORING
+### REFACTORING ###############################################################
 
 fake_sensor_vectors is now huge.  figure out a different strategy...
 	- Don't load all >50MB of events when running specs
@@ -89,14 +106,14 @@ Put a 'context' member on each note that points to shared context hash (***)
 	- this could be different for different phrases
 	- it could contain harmonic info, intended surprise levels, etc.
 
-### MORE RESPONSIVE / INTERACTIVE
+### MORE RESPONSIVE / INTERACTIVE #############################################
 
 Mimic the stimulus's: meter
 Mimic the stimulus's: phrase length
 Mimic the stimulus's: tempo
 Mimic the stimulus's: pitch classes
 
-### INTRODUCING FARG ARCHITECTURE
+### INTRODUCING FARG ARCHITECTURE #############################################
 
 Explore FARG architecture for improvising better endings
 
@@ -108,7 +125,7 @@ Use FARG techniques to look for structure / repeated patterns in the stimulus
 ################################################################################################################
 ################################################################################################################
 
-### Objecive
+### Objecive ##################################################################
 
 NO: Structurally segment the melody into a decomposable tree
 	- this is not what I am trying to do.  I don't believe that every note
@@ -125,7 +142,7 @@ YES: Identify repeated elements or groups of elements.
 	  the bottom-up, note-by-note statistics currently being used to generate
 	  improvisations
 
-### How to represent notes
+### How to represent notes ####################################################
 
 Pour more analysis (symbols) back into the notes themselves:
 	- qIOI
@@ -138,7 +155,7 @@ Pour more analysis (symbols) back into the notes themselves:
 	- fuzzy interval (direction & step/jump)
 and use these dimensions to compare similarity / role 
 
-### Architecture
+### Architecture ##############################################################
 
 What does a group look like?  
 	- Just an array?
@@ -175,7 +192,7 @@ Correspondences between groups may not be strictly top-down, decompositional
 	- Things only get labeled as motifs, themes when they're seen a second 
 	  time?
 
-### Heuristics for grouping / splitting
+### Heuristics for grouping / splitting #######################################
 
 Split groupings at
 	- moments of high surprise

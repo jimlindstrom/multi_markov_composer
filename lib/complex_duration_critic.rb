@@ -40,17 +40,21 @@ class ComplexDurationCritic
   end
 
   def expectations
-    # try generating from the history of {beat position; duration} symbols
-    e = @duration_and_beat_position_critic.expectations
-    return e if !e.nil? and e.num_observations > 0
+    e_arr = []
 
-    # try generating just from the history of durations (independent of beat position)
-    e = @duration_critic.expectations
-    return e if !e.nil? and e.num_observations > 0
+    [@duration_critic, @duration_and_beat_position_critic].each do |critic|
+      e = critic.expectations
+      if e && (e.num_observations > 0)
+        e_arr << e.normalized_and_weighted_by_entropy
+      end
+    end
 
-    # still no luck?  then reset and just pick a random duration
-    @duration_critic.reset!
-    e = @duration_critic.expectations
-    return e
+    if e_arr.length > 0
+      return e_arr.inject(:+)
+    else
+      @pitch_critic.reset! # we got to a point where we have no data.  reset, to get back to some stat we know about
+      return @pitch_critic.expectations
+    end
   end
+
 end

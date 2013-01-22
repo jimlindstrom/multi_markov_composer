@@ -41,28 +41,20 @@ class ComplexPitchCritic
   end
 
   def expectations
-    e1 = @pitch_and_pitch_class_set_critic.expectations
-    e2 = @interval_critic.expectations
+    e_arr = []
 
-    if !e1.nil? and !e2.nil?
-      # NOTE: when multiplying instead of adding these expecations, the 
-      # cumulative information content of this critic doubled or tripled
-      expectations = e1 + e2
-    elsif !e1.nil?
-      expectations = e1 
-    elsif !e2.nil?
-      expectations = e2
-    else
-      expectations = Markov::RandomVariable.new(MusicIR::Pitch.num_values)
+    [@pitch_critic, @interval_critic, @pitch_and_pitch_class_set_critic].each do |critic|
+      e = critic.expectations
+      if e && (e.num_observations > 0)
+        e_arr << e.normalized_and_weighted_by_entropy
+      end
     end
 
-    return expectations if expectations.num_observations > 0
-
-    expectations = @pitch_critic.expectations
-    return expectations if expectations.num_observations > 0
-
-    @pitch_critic.reset! # we got to a point where we have no data.  reset, to get back to some stat we know about
-    expectations = @pitch_critic.expectations
-    return expectations
+    if e_arr.length > 0
+      return e_arr.inject(:+)
+    else
+      @pitch_critic.reset! # we got to a point where we have no data.  reset, to get back to some stat we know about
+      return @pitch_critic.expectations
+    end
   end
 end

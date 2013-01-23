@@ -2,6 +2,7 @@ require 'yaml'
 
 require 'markov'
 require 'music_ir'
+require 'factor-oracle'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 

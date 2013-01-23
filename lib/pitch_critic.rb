@@ -6,10 +6,14 @@ class PitchCritic
   def initialize(order)
     reset_cumulative_information_content
     @markov_chain = Markov::MarkovChain.new(MusicIR::Pitch.alphabet, order)
+    @factor_oracle = FactorOracle::FactorOracle.new
+    @pitch_buffer = []
   end
 
   def reset!
     @markov_chain.reset!
+    @factor_oracle = FactorOracle::FactorOracle.new
+    @pitch_buffer = []
   end
 
   def save(folder)
@@ -39,9 +43,22 @@ class PitchCritic
     next_symbol = note.pitch.to_symbol
     @markov_chain.observe!(next_symbol)
     @markov_chain.transition!(next_symbol)
+
+    @factor_oracle.add_letter(@pitch_buffer, next_symbol)
+    @pitch_buffer << next_symbol
   end
 
   def expectations
-    @markov_chain.expectations
+    e_markov = @markov_chain.expectations
+
+    e_factors = Markov::RandomVariable.new(e_markov.alphabet)
+    e_markov.alphabet.symbols.each { |sym| e_factors.observe!(sym, 1) } # start by observing everything once
+    1.upto(@pitch_buffer.length) do |prefix_len|
+      @factor_oracle.next_letters_for(@pitch_buffer.last(prefix_len)).each do |pitch_symbol|
+        e_factors.observe!(pitch_symbol, prefix_len**2)
+      end
+    end
+
+    e_markov.normalized_and_weighted_by_entropy + e_factors.normalized_and_weighted_by_entropy
   end
 end

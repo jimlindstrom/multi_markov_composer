@@ -6,10 +6,14 @@ class DurationCritic
   def initialize(order)
     reset_cumulative_information_content
     @markov_chain = Markov::MarkovChain.new(MusicIR::Duration.alphabet, order)
+    @factor_oracle = FactorOracle::FactorOracle.new
+    @duration_buffer = []
   end
 
   def reset!
     @markov_chain.reset!
+    @factor_oracle = FactorOracle::FactorOracle.new
+    @duration_buffer = []
   end
 
   def save(folder)
@@ -39,9 +43,22 @@ class DurationCritic
     next_symbol = note.duration.to_symbol
     @markov_chain.observe!(next_symbol)
     @markov_chain.transition!(next_symbol)
+
+    @factor_oracle.add_letter(@duration_buffer, next_symbol)
+    @duration_buffer << next_symbol
   end
 
   def expectations
-    @markov_chain.expectations
+    e_markov = @markov_chain.expectations
+
+    e_factors = Markov::RandomVariable.new(e_markov.alphabet)
+    e_markov.alphabet.symbols.each { |sym| e_factors.observe!(sym, 1) } # start by observing everything once
+    1.upto(@duration_buffer.length) do |prefix_len|
+      @factor_oracle.next_letters_for(@duration_buffer.last(prefix_len)).each do |duration_symbol|
+        e_factors.observe!(duration_symbol, prefix_len**2)
+      end
+    end
+
+    e_markov.normalized_and_weighted_by_entropy + e_factors.normalized_and_weighted_by_entropy
   end
 end

@@ -11,6 +11,9 @@ How could we create critics that tie rhythmic and pitch information together?
 	  next pitch.
 	- Similarly, if you've got very strong pitch expectations (low entropy),
 	  that may suggest a nice long end-of-phrase duration.
+	- Perhaps the PitchAndPitchClassSetCritic could be improved by 
+	  including a metric strength factor (2 for first beat of measure, 1
+	  for all other beats, 0 for subbeats).
 
 Perhaps we could explicitly model listener surprise/boredom and use that as a
 symbol in critics.
@@ -19,8 +22,6 @@ symbol in critics.
 	  outputs a discrete state, such as: normal (anything's fine), bored 
 	  (wants more surprise), recovering (doesn't want any surprise). The 
 	  response curve timing would need to be optimized by trial and error.
-
--- I like the idea of putting in song-specific markov chains to look for repeated motifs/patterns in a song. I'd also want some sort of penalty (akin to boredom) for when a song doesn't exhibit any self-similarity and longer-term structure.
 
 Whenever the piece is in an expository phase (developing new material), there
 should be a critic that ensures the chunks are intelligible (not too long, 
@@ -35,6 +36,8 @@ clearly demarkated, statistically differentiated).  How to do that?
 	  the code currently instantiates meter explicitly, but does not do so 
 	  for pitch class set. I think that the composer should model not only
 	  these properties more explicitly, but also superstructure. 
+	- I would also want some sort of penalty (akin to boredom) for when a 
+	  song doesn't exhibit any self-similarity and longer-term structure.
 
 ### BETTER IMPROVS ############################################################
 

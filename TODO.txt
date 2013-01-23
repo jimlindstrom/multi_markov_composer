@@ -39,6 +39,14 @@ clearly demarkated, statistically differentiated).  How to do that?
 	- I would also want some sort of penalty (akin to boredom) for when a 
 	  song doesn't exhibit any self-similarity and longer-term structure.
 
+What about attempting to classify the pitch class set into a best match against
+N reference sets? That would give a notion of tonic. Could improve upon the
+PitchAndPitchClassSet critic. 
+	- I'd like MusicIR to take a set of notes, weigh them by their metric
+	  strength and return both a tonic note (pitch class) and a mode (the
+	  index of the best-fitting of the N pre-determined normalized (meaning
+	  rotated to the tonic position) pitch class sets).
+
 ### BETTER IMPROVS ############################################################
 
 - Why is the ComplexDurationCritic so surprised whenever there's a longer note? 

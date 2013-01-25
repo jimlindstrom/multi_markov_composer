@@ -59,6 +59,12 @@ class DurationCritic
       end
     end
 
-    e_markov.normalized_and_weighted_by_entropy + e_factors.normalized_and_weighted_by_entropy
+    if e_markov.num_observations == 0
+      e_factors
+    elsif e_factors.num_observations == 0
+      e_markov
+    else
+      e_markov.normalized_and_weighted_by_entropy + e_factors.normalized_and_weighted_by_entropy
+    end
   end
 end

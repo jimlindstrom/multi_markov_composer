@@ -17,6 +17,10 @@ require File.join(File.dirname(__FILE__), 'lib', 'duration_and_beat_position_sym
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_class_set_symbol')
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_and_pitch_class_set_symbol.rb')
 
+require File.join(File.dirname(__FILE__), 'lib', 'chord')
+require File.join(File.dirname(__FILE__), 'lib', 'key_estimator_chord_stats')
+require File.join(File.dirname(__FILE__), 'lib', 'note_queue')
+
 require File.join(File.dirname(__FILE__), 'lib', 'critic')
 require File.join(File.dirname(__FILE__), 'lib', 'duration_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'duration_and_beat_position_critic')
@@ -25,9 +29,6 @@ require File.join(File.dirname(__FILE__), 'lib', 'pitch_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'interval_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'complex_pitch_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'complex_duration_critic')
-
-require File.join(File.dirname(__FILE__), 'lib', 'key_estimator_chord_stats')
-require File.join(File.dirname(__FILE__), 'lib', 'key_estimator')
 
 require File.join(File.dirname(__FILE__), 'lib', 'duration_generator')
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_generator')

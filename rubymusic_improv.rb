@@ -3,6 +3,8 @@ require 'yaml'
 require 'markov'
 require 'music_ir'
 require 'factor-oracle'
+require 'narray'
+require 'hmm'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
@@ -23,6 +25,9 @@ require File.join(File.dirname(__FILE__), 'lib', 'pitch_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'interval_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'complex_pitch_critic')
 require File.join(File.dirname(__FILE__), 'lib', 'complex_duration_critic')
+
+require File.join(File.dirname(__FILE__), 'lib', 'key_estimator_chord_stats')
+require File.join(File.dirname(__FILE__), 'lib', 'key_estimator')
 
 require File.join(File.dirname(__FILE__), 'lib', 'duration_generator')
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_generator')

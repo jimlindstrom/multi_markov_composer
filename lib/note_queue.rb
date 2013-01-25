@@ -34,7 +34,7 @@ module MusicIR
         if (!max_likelihood) || (likelihood > max_likelihood)
           max_likelihood = likelihood
           likeliest_key_pitch_class = cur_key_pitch_class
-          likeliest_chords = inferred_chords
+          likeliest_chords = inferred_chords # FIXME: need to transpose these back into the original key.
         end
   
         cur_key_pitch_class = PitchClass.new((cur_key_pitch_class.val+1)%12)

@@ -19,20 +19,6 @@ position within a phrase, etc.
 
 This is inspired by the architectures of Douglass Hofstadter's FARG group.
 
-### Beat Detection
-
-I'm using a Beat Similarity Matrix (see <http://scholar.google.com/scholar?q=beat+similarity+matrix>)
-for beat detection.  This is essentially an extension of autocorrelation.  Where autocorrelation works
-on a list of scalars, similarity matrices work on a list of complex features (i.e. vectors).  First, you 
-define a similarity function for each vector element (pitch, duration, inteval, etc).  You can use this 
-to define a function that compares the similarity of any two beats.  Finally, using that function, you can
-generate a 2D matrix of the similarity of each beat to every other beat.  The strength of a given periodicity
-at various beat period (2 beats, 3 beats, etc) can be computed as the dot product of a diagonal.  
-
-In addition to being a fairly effective means of detecting a fragment's time signature, beat similarity
-matrices are interesting as visualizations of rhythmic structure in songs: 
-<http://jimlindstrom.github.com/InteractiveMidiImproviser/>
-
 ### Surprise/Expectation
 
 Each of the critics reports its surprise at each new input, based on what it knows of the time series

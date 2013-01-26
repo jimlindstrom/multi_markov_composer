@@ -10,6 +10,7 @@ class ModeAndChordAndPitchClassCritic
                               MusicIR::Interval.alphabet, 
                               order, 
                               lookahead)
+    reset!
   end
 
   def reset!
@@ -60,18 +61,18 @@ class ModeAndChordAndPitchClassCritic
 
   def listen(note)
     raise ArgumentError.new("not a note.  is a #{note.class}") if note.class != MusicIR::Note
-    raise ArgumentError.new("note must have key analysis") if note.analysis[:key].nil?
-    raise ArgumentError.new("note must have chord analysis") if note.analysis[:chord].nil?
-    raise ArgumentError.new("note must have notes_left analysis") if note.analysis[:notes_left].nil?
+    raise ArgumentError.new("note must have key analysis") if !note.analysis[:key]
+    raise ArgumentError.new("note must have chord analysis") if !note.analysis[:chord]
+    raise ArgumentError.new("note must have notes_left analysis") if !note.analysis[:notes_left]
 
-    key_mode = note.analysis[:key].type
+    key_mode = note.analysis[:key].mode
     rel_chord_pitch_class = MusicIR::PitchClass.new((12 +
-                                                     note.analysis[:chord].pc.val -
-                                                     note.analysis[:key].pc.val) % 12)
-    rel_chord = Chord.new(rel_chord_pitch_class, note.analysis[:chord].type)
+                                                     note.analysis[:chord].pitch_class.val -
+                                                     note.analysis[:key].pitch_class.val) % 12)
+    rel_chord = Chord.new(rel_chord_pitch_class, note.analysis[:chord].mode)
     rel_pitch_class = MusicIR::PitchClass.new((12 +
                                                MusicIR::PitchClass.from_pitch(note.pitch).val -
-                                               note.analysis[:key].pc.val) % 12)
+                                               note.analysis[:key].pitch_class.val) % 12)
     next_state = ModeAndChordAndPitchClass.new(key_mode, rel_chord, rel_pitch_class).to_symbol
 
     @note_history.unshift note

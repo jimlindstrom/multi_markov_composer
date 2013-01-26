@@ -36,6 +36,8 @@ class Improvisor
       # update the last note with the number of notes left
       response.last.analysis[:notes_left] = num_notes - response.length
 
+      response.analyze_harmony! # FIXME: this should be done intentionally, rather than by backing it out...
+
       # FIXME: there needs to be a test around this. It was missing
       critics.each { |critic| critic.listen response.last } 
     end

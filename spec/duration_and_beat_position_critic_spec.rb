@@ -81,7 +81,6 @@ describe DurationAndBeatPositionCritic do
       dc.reset!
       x = dc.expectations
 
-      puts "x: " + x.inspect
       x.information_content_for(@nq1[0].duration.val).should be < x.information_content_for(@nq2[1].duration.val)
     end
     it "returns a random variable that only chooses states observed" do

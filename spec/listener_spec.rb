@@ -8,6 +8,7 @@ describe Listener do
     @nq = @vector[:note_queue]
     @nq.detect_meter
     @nq.analyze!
+    @nq.analyze_harmony!
   end
 
   context ".add_critic" do

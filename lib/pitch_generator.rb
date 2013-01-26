@@ -5,13 +5,16 @@ class PitchGenerator
     @pitch_critic = PitchCritic.new(order=2)
     @interval_critic = IntervalCritic.new(order=3, lookahead=3)
     @pitch_and_pitch_class_set_critic = PitchAndPitchClassSetCritic.new(order=3, lookahead=3)
+    @mode_and_chord_and_pitch_class_critic = ModeAndChordAndPitchClassCritic.new(order=2, lookahead=2)
     @complex_pitch_critic = ComplexPitchCritic.new(@pitch_critic, 
                                                    @interval_critic, 
-                                                   @pitch_and_pitch_class_set_critic)
+                                                   @pitch_and_pitch_class_set_critic,
+                                                   @mode_and_chord_and_pitch_class_critic)
 
     @critics = [ @pitch_critic,
                  @interval_critic,
                  @pitch_and_pitch_class_set_critic,
+                 @mode_and_chord_and_pitch_class_critic,
                  @complex_pitch_critic ]
   end
 

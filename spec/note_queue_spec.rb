@@ -15,13 +15,20 @@ describe MusicIR::NoteQueue do
 
     subject { @notes }
 
-    its(:key) { should be_an_instance_of Chord }
-    it "should detect the key signature of the note queue" do
-      subject.key.to_s.should == "Dmajor"
+    it "should set a key for each note" do
+      subject.all?{ |note| note.analysis[:key].class == Chord }.should be_true
+    end
+
+    it "should set the right key for the first  note" do
+      subject.first.analysis[:key].to_s.should == "Dmajor"
     end
 
     it "should set a harmonic context for each note" do
-      subject.all?{ |note| note.analysis[:implied_chord].class == Chord }.should be_true
+      subject.all?{ |note| note.analysis[:chord].class == Chord }.should be_true
+    end
+
+    it "should set the right chord for the first note" do
+      subject.first.analysis[:chord].to_s.should == "Bminor"
     end
   end
 end

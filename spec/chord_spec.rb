@@ -59,6 +59,12 @@ describe Chord do
     end
   end
 
+  describe ".num_values" do
+    subject { Chord.num_values }
+    it { should be_an_instance_of Fixnum }
+    it { should be == (2*12) }
+  end
+
   describe "#alphabet" do
     subject { Chord.alphabet }
     it { should be_an_instance_of Markov::LiteralAlphabet }

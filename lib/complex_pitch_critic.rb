@@ -3,12 +3,13 @@
 class ComplexPitchCritic
   include CriticWithInfoContent
 
-  def initialize(pitch_critic, interval_critic, pitch_and_pitch_class_set_critic)
+  def initialize(pitch_critic, interval_critic, pitch_and_pitch_class_set_critic, mode_and_chord_and_pitch_class_critic)
     reset_cumulative_information_content
 
     @pitch_critic = pitch_critic
     @interval_critic = interval_critic
     @pitch_and_pitch_class_set_critic = pitch_and_pitch_class_set_critic
+    @mode_and_chord_and_pitch_class_critic = mode_and_chord_and_pitch_class_critic
   end
 
   def reset!
@@ -43,7 +44,7 @@ class ComplexPitchCritic
   def expectations
     e_arr = []
 
-    [@pitch_critic, @interval_critic, @pitch_and_pitch_class_set_critic].each do |critic|
+    [@pitch_critic, @interval_critic, @pitch_and_pitch_class_set_critic, @mode_and_chord_and_pitch_class_critic].each do |critic|
       e = critic.expectations
       if e && (e.num_observations > 0)
         e_arr << e.normalized_and_weighted_by_entropy

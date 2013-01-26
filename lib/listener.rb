@@ -64,6 +64,7 @@ class Listener
       return false # FIXME: figure out a way to listen with only partial info (no meter)
     end
     notes.analyze!
+    notes.analyze_harmony!
     return true
   end
 

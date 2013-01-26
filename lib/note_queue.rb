@@ -2,8 +2,6 @@
 
 module MusicIR
   class NoteQueue
-    attr_reader :key
-
     PITCH_CLASS_STRINGS = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
     CHORD_TYPES         = [:major, :minor]
     CHORDS              = PITCH_CLASS_STRINGS.map { |pc_str| CHORD_TYPES.map { |ct| Chord.new(PitchClass.from_s(pc_str), ct) } }.flatten
@@ -34,16 +32,22 @@ module MusicIR
         if (!max_likelihood) || (likelihood > max_likelihood)
           max_likelihood = likelihood
           likeliest_key_pitch_class = cur_key_pitch_class
-          likeliest_chords = inferred_chords # FIXME: need to transpose these back into the original key.
+          likeliest_chords = inferred_chords.map do |chord|
+            Chord.new(MusicIR::PitchClass.new((chord.pc.val+transpose_steps)%12), chord.type)
+          end
         end
   
         cur_key_pitch_class = PitchClass.new((cur_key_pitch_class.val+1)%12)
       end
   
-      @key = Chord.new(likeliest_key_pitch_class, :major) #FIXME ... or minor?
+      tonic_chords = likeliest_chords.select{ |chord| chord.pc.val==likeliest_key_pitch_class.val }
+      major_tonic_count = tonic_chords.select{ |chord| chord.type==:major }.length
+      minor_tonic_count = tonic_chords.select{ |chord| chord.type==:minor }.length
+      key_chord_type = (major_tonic_count >= minor_tonic_count) ? :major : :minor
 
       self.each_with_index do |note, idx|
-        note.analysis[:implied_chord] = likeliest_chords[idx]
+        note.analysis[:key]   = Chord.new(likeliest_key_pitch_class, key_chord_type)
+        note.analysis[:chord] = likeliest_chords[idx]
       end
     end
      

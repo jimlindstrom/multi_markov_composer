@@ -17,6 +17,7 @@ describe DurationGenerator do
     @notes.push n
 
     @notes.analyze!
+    @notes.analyze_harmony!
   end
 
   context ".critics" do

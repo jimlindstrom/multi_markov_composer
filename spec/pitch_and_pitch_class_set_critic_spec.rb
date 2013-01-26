@@ -7,10 +7,12 @@ describe PitchAndPitchClassSetCritic do
     @vector = $meter_vectors["Bring back my bonnie to me"]
     @nq1 = @vector[:note_queue]
     @nq1.analyze!
+    @nq1.analyze_harmony!
 
     @vector = $meter_vectors["Battle hymn of the republic"]
     @nq2 = @vector[:note_queue]
     @nq2.analyze!
+    @nq2.analyze_harmony!
   end
 
   it_should_behave_like "a critic", PitchAndPitchClassSetCritic, [order=2, lookahead=1], "data/test/pitch_and_pitch_class_set_critic_#{order}_#{lookahead}.json"

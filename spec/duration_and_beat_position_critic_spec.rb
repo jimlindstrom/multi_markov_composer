@@ -8,11 +8,13 @@ describe DurationAndBeatPositionCritic do
     @nq1 = @vector[:note_queue]
     @nq1.detect_meter
     @nq1.analyze!
+    @nq1.analyze_harmony!
 
     @vector = $meter_vectors["Battle hymn of the republic"]
     @nq2 = @vector[:note_queue]
     @nq2.detect_meter
     @nq2.analyze!
+    @nq2.analyze_harmony!
   end
 
   it_should_behave_like "a critic", DurationAndBeatPositionCritic, [order=2, lookahead=1], "data/test/duration_and_beat_position_critic_#{order}_#{lookahead}.json"

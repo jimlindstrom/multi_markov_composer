@@ -40,6 +40,7 @@ describe DurationCritic do
       it "attributes less information_content to the former state" do
         subject.information_content_for(1).should be < subject.information_content_for(0)
       end
+      its(:sample) { should_not be_nil }
       it "returns a random variable that only chooses states observed" do
         [0, 1].should include(MusicIR::Duration.new(subject.sample).val)
       end

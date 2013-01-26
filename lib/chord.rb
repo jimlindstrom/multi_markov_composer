@@ -25,6 +25,10 @@ class Chord
     Chord.new(pc, type)
   end
 
+  def self.num_values
+    2*12
+  end
+
   def self.alphabet
     @@alphabet ||= Markov::LiteralAlphabet.new( (0..((2*12)-1)).to_a )
   end

@@ -3,8 +3,6 @@ require 'yaml'
 require 'markov'
 require 'music_ir'
 require 'factor-oracle'
-require 'narray'
-require 'hmm'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
@@ -16,11 +14,8 @@ require File.join(File.dirname(__FILE__), 'lib', 'beat_position_symbol')
 require File.join(File.dirname(__FILE__), 'lib', 'duration_and_beat_position_symbol')
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_class_set_symbol')
 require File.join(File.dirname(__FILE__), 'lib', 'pitch_and_pitch_class_set_symbol')
-require File.join(File.dirname(__FILE__), 'lib', 'mode_and_chord_and_pitch_class')
-
 require File.join(File.dirname(__FILE__), 'lib', 'chord')
-require File.join(File.dirname(__FILE__), 'lib', 'key_estimator_chord_stats')
-require File.join(File.dirname(__FILE__), 'lib', 'note_queue')
+require File.join(File.dirname(__FILE__), 'lib', 'mode_and_chord_and_pitch_class')
 
 require File.join(File.dirname(__FILE__), 'lib', 'critic')
 require File.join(File.dirname(__FILE__), 'lib', 'duration_critic')

@@ -69,7 +69,7 @@ class ModeAndChordAndPitchClassCritic
     rel_chord_pitch_class = MusicIR::PitchClass.new((12 +
                                                      note.analysis[:chord].pitch_class.val -
                                                      note.analysis[:key].pitch_class.val) % 12)
-    rel_chord = Chord.new(rel_chord_pitch_class, note.analysis[:chord].mode)
+    rel_chord = MusicIR::Chord.new(rel_chord_pitch_class, note.analysis[:chord].mode)
     rel_pitch_class = MusicIR::PitchClass.new((12 +
                                                MusicIR::PitchClass.from_pitch(note.pitch).val -
                                                note.analysis[:key].pitch_class.val) % 12)

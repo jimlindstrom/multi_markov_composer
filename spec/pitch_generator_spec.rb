@@ -28,10 +28,10 @@ describe PitchGenerator do
       note2 = MusicIR::Note.new(MusicIR::Pitch.new(55), MusicIR::Duration.new(1))
       note1.analysis[:notes_left] = 2
       note2.analysis[:notes_left] = 1
-      note1.analysis[:key] = Chord.new(MusicIR::PitchClass.from_s("C"), :major)
-      note2.analysis[:key] = Chord.new(MusicIR::PitchClass.from_s("C"), :major)
-      note1.analysis[:chord] = Chord.new(MusicIR::PitchClass.from_s("G"), :major)
-      note2.analysis[:chord] = Chord.new(MusicIR::PitchClass.from_s("G"), :major)
+      note1.analysis[:key] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("C"), :major)
+      note2.analysis[:key] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("C"), :major)
+      note1.analysis[:chord] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("G"), :major)
+      note2.analysis[:chord] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("G"), :major)
 
       pg = PitchGenerator.new
       critics = pg.critics
@@ -50,10 +50,10 @@ describe PitchGenerator do
       note2 = MusicIR::Note.new(MusicIR::Pitch.new(55), MusicIR::Duration.new(1))
       note1.analysis[:notes_left] = 2
       note2.analysis[:notes_left] = 1
-      note1.analysis[:key] = Chord.new(MusicIR::PitchClass.from_s("C"), :major)
-      note2.analysis[:key] = Chord.new(MusicIR::PitchClass.from_s("C"), :major)
-      note1.analysis[:chord] = Chord.new(MusicIR::PitchClass.from_s("G"), :major)
-      note2.analysis[:chord] = Chord.new(MusicIR::PitchClass.from_s("G"), :major)
+      note1.analysis[:key] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("C"), :major)
+      note2.analysis[:key] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("C"), :major)
+      note1.analysis[:chord] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("G"), :major)
+      note2.analysis[:chord] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("G"), :major)
 
       pg = PitchGenerator.new
       critics = pg.critics

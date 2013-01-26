@@ -10,9 +10,9 @@ class ModeAndChordAndPitchClass
   end
 
   def to_symbol
-    sym  = Chord::MODE_TO_VAL[@mode]
+    sym  = MusicIR::Chord::MODE_TO_VAL[@mode]
 
-    sym *= Chord.num_values
+    sym *= MusicIR::Chord.num_values
     sym += @chord.to_symbol
 
     sym *= MusicIR::PitchClass.num_values
@@ -25,16 +25,16 @@ class ModeAndChordAndPitchClass
     pc    = MusicIR::PitchClass.new(sym % MusicIR::PitchClass.num_values)
     s     = (sym / MusicIR::PitchClass.num_values).floor
 
-    chord = Chord.from_symbol(s % Chord.num_values)
-    s     = (s / Chord.num_values).floor
+    chord = MusicIR::Chord.from_symbol(s % MusicIR::Chord.num_values)
+    s     = (s / MusicIR::Chord.num_values).floor
 
-    mode  = Chord::VAL_TO_MODE[s]
+    mode  = MusicIR::Chord::VAL_TO_MODE[s]
 
     ModeAndChordAndPitchClass.new(mode, chord, pc)
   end
 
   def self.num_values
-    Chord::MODES.length * Chord.num_values * MusicIR::PitchClass.num_values
+    MusicIR::Chord::MODES.length * MusicIR::Chord.num_values * MusicIR::PitchClass.num_values
   end
 
   def self.alphabet

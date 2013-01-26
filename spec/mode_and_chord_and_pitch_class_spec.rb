@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ModeAndChordAndPitchClass do
   let(:mode)        { :minor }
-  let(:chord)       { Chord.new(MusicIR::PitchClass.from_s("F"), :major) }
+  let(:chord)       { MusicIR::Chord.new(MusicIR::PitchClass.from_s("F"), :major) }
   let(:pitch_class) { MusicIR::PitchClass.from_s("B") }
 
   describe "#new" do
@@ -30,7 +30,7 @@ describe ModeAndChordAndPitchClass do
 
   describe "#num_values" do
     subject { ModeAndChordAndPitchClass.num_values }
-    it { should == (Chord::MODES.length * Chord.num_values * MusicIR::PitchClass.num_values) }
+    it { should == (MusicIR::Chord::MODES.length * MusicIR::Chord.num_values * MusicIR::PitchClass.num_values) }
   end
 
   describe "#alphabet" do

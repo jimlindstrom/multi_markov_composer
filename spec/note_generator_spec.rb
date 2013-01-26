@@ -10,14 +10,14 @@ describe NoteGenerator do
 
     n = MusicIR::Note.new(MusicIR::Pitch.new(50), MusicIR::Duration.new(1))
     n.analysis[:beat_position] = m.initial_beat_position
-    n.analysis[:key]   = Chord.new(MusicIR::PitchClass.from_s("C"), :major)
-    n.analysis[:chord] = Chord.new(MusicIR::PitchClass.from_s("G"), :major)
+    n.analysis[:key]   = MusicIR::Chord.new(MusicIR::PitchClass.from_s("C"), :major)
+    n.analysis[:chord] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("G"), :major)
     @notes.push n
 
     n = MusicIR::Note.new(MusicIR::Pitch.new(55), MusicIR::Duration.new(2))
     n.analysis[:beat_position] = @notes.first.analysis[:beat_position] + @notes.first.duration
-    n.analysis[:key]   = Chord.new(MusicIR::PitchClass.from_s("C"), :major)
-    n.analysis[:chord] = Chord.new(MusicIR::PitchClass.from_s("G"), :major)
+    n.analysis[:key]   = MusicIR::Chord.new(MusicIR::PitchClass.from_s("C"), :major)
+    n.analysis[:chord] = MusicIR::Chord.new(MusicIR::PitchClass.from_s("G"), :major)
     @notes.push n
 
     @notes.analyze!

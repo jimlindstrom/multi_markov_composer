@@ -3,38 +3,39 @@
 require 'spec_helper'
 
 describe MusicIR::BeatPosition do
-
-  before(:each) do
+  let(:measure)           { 2 }
+  let(:beat)              { 2 }
+  let(:subbeat)           { 3 }
+  let(:beats_per_measure) { 4 }
+  let(:subbeats_per_beat) { 1 }
+  let(:beat_pos)          { MusicIR::BeatPosition.new }
+  before do
+    beat_pos.measure           = measure
+    beat_pos.beat              = beat
+    beat_pos.subbeat           = subbeat
+    beat_pos.beats_per_measure = beats_per_measure
+    beat_pos.subbeats_per_beat = subbeats_per_beat
   end
 
-  context "to_symbol" do
-    it "should return a BeatPositionSymbol" do
-      b = MusicIR::BeatPosition.new
-      b.measure = 0
-      b.beat    = 2
-      b.subbeat = 3
-      b.beats_per_measure = 4
-      b.subbeats_per_beat = 1
-      b.to_symbol.should be_an_instance_of MusicIR::BeatPositionSymbol
-    end
-    it "should return a BeatPositionSymbol whose value corresponds to the BeatPosition's value" do
-      b = MusicIR::BeatPosition.new
-      b.measure = 0
-      b.beat    = 2
-      b.subbeat = 3
-      b.beats_per_measure = 4
-      b.subbeats_per_beat = 1
+  describe ".to_symbol" do
+    subject { beat_pos.to_symbol }
 
-      keys = [:beat, :beats_per_measure, :subbeat, :subbeats_per_beat]
-      obj1 = b
-      h1   = Hash[*keys.zip(keys.map{ |x| obj1.send(x.to_s) }).flatten]
-
-      keys = [:beat, :beats_per_measure, :subbeat, :subbeats_per_beat]
-      obj2 = b.to_symbol.to_object
-      h2   = Hash[*keys.zip(keys.map{ |x| obj2.send(x.to_s) }).flatten]
-
-      h1.should == h2
-    end
+    it { should be_a Fixnum }
   end
 
+  describe "#from_symbol" do
+    subject { MusicIR::BeatPosition.from_symbol(beat_pos.to_symbol) }
+
+    it { should be_a MusicIR::BeatPosition }
+    its(:measure)           { should be_nil } # FIXME: This is weird, and should probably be rethought.
+    its(:beat)              { should == beat }
+    its(:subbeat)           { should == subbeat }
+    its(:beats_per_measure) { should == beats_per_measure }
+    its(:subbeats_per_beat) { should == subbeats_per_beat }
+  end
+
+  describe "#alphabet" do
+    subject { MusicIR::BeatPosition.alphabet }
+    it { should be_a Markov::LiteralAlphabet }
+  end
 end

@@ -7,15 +7,19 @@ module MusicIR
       v  = @duration.to_symbol
   
       v *= BeatPosition.num_values
-      v += @beat_position.to_symbol.val
+      v += @beat_position.to_symbol
   
       v
     end
  
     def self.from_symbol(sym)
-      bps = BeatPositionSymbol.new(sym % BeatPosition.num_values)
-      d   = Duration.new((sym / BeatPosition.num_values).floor)
-      DurationAndBeatPosition.new(d, bps.to_object)
+      s = sym
+      bp = BeatPosition.from_symbol(s % BeatPosition.num_values)
+
+      s = (s / BeatPosition.num_values).floor
+      d  = Duration.new(s)
+
+      DurationAndBeatPosition.new(d, bp)
     end
 
     def self.alphabet

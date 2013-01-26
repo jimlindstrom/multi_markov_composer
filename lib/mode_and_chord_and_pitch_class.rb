@@ -10,7 +10,7 @@ class ModeAndChordAndPitchClass
   end
 
   def to_symbol
-    sym  = Chord::TYPE_TO_VAL[@mode]
+    sym  = Chord::MODE_TO_VAL[@mode]
 
     sym *= Chord.num_values
     sym += @chord.to_symbol
@@ -28,13 +28,13 @@ class ModeAndChordAndPitchClass
     chord = Chord.from_symbol(s % Chord.num_values)
     s     = (s / Chord.num_values).floor
 
-    mode  = Chord::VAL_TO_TYPE[s]
+    mode  = Chord::VAL_TO_MODE[s]
 
     ModeAndChordAndPitchClass.new(mode, chord, pc)
   end
 
   def self.num_values
-    Chord::TYPES.length * Chord.num_values * MusicIR::PitchClass.num_values
+    Chord::MODES.length * Chord.num_values * MusicIR::PitchClass.num_values
   end
 
   def self.alphabet

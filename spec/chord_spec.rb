@@ -6,19 +6,19 @@ describe Chord do
   end
 
   describe "#new" do
-    context "given a valid pitch class and chord type"do
+    context "given a valid pitch class and mode"do
       let(:pitch_class) { MusicIR::PitchClass.from_s("C#") }
-      let(:chord_type)  { :major }
-      subject { Chord.new(pitch_class, chord_type) } 
+      let(:mode) { :major }
+      subject { Chord.new(pitch_class, mode) } 
       it { should be_an_instance_of Chord }
     end
   end
 
   describe ".to_symbol" do
-    context "given a valid pitch class and chord type" do
+    context "given a valid pitch class and mode" do
       let(:pitch_class) { MusicIR::PitchClass.from_s("C#") }
-      let(:chord_type)  { :major }
-      let(:chord) { Chord.new(pitch_class, chord_type) } 
+      let(:mode) { :major }
+      let(:chord) { Chord.new(pitch_class, mode) } 
       subject { chord.to_symbol }
       it { should be_an_instance_of Fixnum }
     end
@@ -27,25 +27,25 @@ describe Chord do
   describe "#from_symbol" do
     context "given a valid symbol" do
       let(:pitch_class) { MusicIR::PitchClass.from_s("C#") }
-      let(:chord_type)  { :minor }
-      let(:chord) { Chord.new(pitch_class, chord_type) } 
+      let(:mode) { :minor }
+      let(:chord) { Chord.new(pitch_class, mode) } 
       let(:chord_symbol) { chord.to_symbol }
       subject { Chord.from_symbol(chord_symbol) }
       it { should be_an_instance_of Chord }
       it "should have the same pitch class value as the original chord" do
-        subject.pc.val.should ==  pitch_class.val
+        subject.pitch_class.val.should ==  pitch_class.val
       end
-      it "should have the same chord type as the original chord" do
-        subject.type.should == chord_type
+      it "should have the same mode as the original chord" do
+        subject.mode.should == mode
       end
     end
   end
 
   describe ".to_s" do
-    context "given a valid pitch class and chord type" do
+    context "given a valid pitch class and mode" do
       let(:pitch_class) { MusicIR::PitchClass.from_s("C#") }
-      let(:chord_type)  { :major }
-      let(:chord) { Chord.new(pitch_class, chord_type) } 
+      let(:mode) { :major }
+      let(:chord) { Chord.new(pitch_class, mode) } 
       context "when use_flats == true or isn't specified" do
         subject { chord.to_s }
         it { should be_an_instance_of String }

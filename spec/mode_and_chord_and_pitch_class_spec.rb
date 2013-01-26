@@ -30,7 +30,7 @@ describe ModeAndChordAndPitchClass do
 
   describe "#num_values" do
     subject { ModeAndChordAndPitchClass.num_values }
-    it { should == (Chord::TYPES.length * Chord.num_values * MusicIR::PitchClass.num_values) }
+    it { should == (Chord::MODES.length * Chord.num_values * MusicIR::PitchClass.num_values) }
   end
 
   describe "#alphabet" do

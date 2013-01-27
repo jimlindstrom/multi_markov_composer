@@ -52,8 +52,8 @@ class ComplexDurationCritic
     if e_arr.length > 0
       return e_arr.inject(:+)
     else
-      @pitch_critic.reset! # we got to a point where we have no data.  reset, to get back to some stat we know about
-      return @pitch_critic.expectations
+      @duration_critic.reset! # we got to a point where we have no data.  reset, to get back to some stat we know about
+      return @duration_critic.expectations
     end
   end
 

@@ -52,7 +52,10 @@ class DurationCritic
     e_markov = @markov_chain.expectations
 
     e_factors = Markov::RandomVariable.new(e_markov.alphabet)
-    e_markov.alphabet.symbols.each { |sym| e_factors.observe!(sym, 1) } # start by observing everything once
+    #e_markov.alphabet.symbols.each { |sym| e_factors.observe!(sym, 1) } # start by observing everything once (FIXME: this is blowing up the tests by introducing 
+    #                                                                    # expectations for symbols that have never been observed.
+    #                                                                    # The point of it, though, was to ensure that weighting these expectations by entropy 
+    #                                                                    # would work. Now it's going to overstate its confidence in contexts with few observations
     1.upto(@duration_buffer.length) do |prefix_len|
       @factor_oracle.next_letters_for(@duration_buffer.last(prefix_len)).each do |duration_symbol|
         e_factors.observe!(duration_symbol, prefix_len**2)

@@ -52,7 +52,7 @@ class PitchCritic
     e_markov = @markov_chain.expectations
 
     e_factors = Markov::RandomVariable.new(e_markov.alphabet)
-    e_markov.alphabet.symbols.each { |sym| e_factors.observe!(sym, 1) } # start by observing everything once
+    #e_markov.alphabet.symbols.each { |sym| e_factors.observe!(sym, 1) } # start by observing everything once
     1.upto(@pitch_buffer.length) do |prefix_len|
       @factor_oracle.next_letters_for(@pitch_buffer.last(prefix_len)).each do |pitch_symbol|
         e_factors.observe!(pitch_symbol, prefix_len**2)

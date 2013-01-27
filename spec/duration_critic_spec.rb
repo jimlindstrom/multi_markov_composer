@@ -26,6 +26,7 @@ describe DurationCritic do
     context "when one note has been heard twice and a second one once" do
       let(:dc) { DurationCritic.new(order=1) }
       before(:all) do
+        #puts "x: " + dc.expectations.observations.inspect
         2.times do
           dc.listen(MusicIR::Note.new(MusicIR::Pitch.new(0), MusicIR::Duration.new(1)))
           dc.reset!
@@ -42,6 +43,7 @@ describe DurationCritic do
       end
       its(:sample) { should_not be_nil }
       it "returns a random variable that only chooses states observed" do
+        #puts "x: " + subject.observations.inspect
         [0, 1].should include(MusicIR::Duration.new(subject.sample).val)
       end
     end

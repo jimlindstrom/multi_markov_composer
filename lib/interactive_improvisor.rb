@@ -19,7 +19,12 @@ class InteractiveImprovisor
     num_notes = 0
     puts "\ttraining over #{num_training_vectors} vectors" if LOGGING
     until (stimulus_events = @sensor.get_stimulus).nil?
-      stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
+      stimulus_notes = nil
+      begin
+        stimulus_notes = MusicIR::NoteQueue.from_event_queue(stimulus_events)
+      rescue
+        puts "Caught exception. Skipping"
+      end
       if stimulus_notes 
         if stimulus_notes.any?{ |item| item.is_a?(MusicIR::Rest) }
           puts "WARNING: skipping stimulus. Can't handle MusicIR::Rest's yet."

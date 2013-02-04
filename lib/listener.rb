@@ -57,13 +57,12 @@ class Listener
   end
 
   def analyze_note_queue(notes)
-    if notes.detect_meter
+    if notes.meter
       puts "\tmeter: #{notes.meter.inspect}" if LOGGING
     else
       puts "\tfailed to detect meter. ignoring stimulus." if LOGGING
       return false # FIXME: figure out a way to listen with only partial info (no meter)
     end
-    notes.analyze!
     notes.analyze_harmony!
     return true
   end
